@@ -20,7 +20,7 @@ static inline uint32_t _rol(uint32_t data, int shift)
 
 static inline uint32_t _rol_c(uint32_t data, int shift, int cin, int* cout)
 {
-	int32_t cmask = _lsl(!!carry, shift - 1);
+	int32_t cmask = _lsl(!!cin, shift - 1);
 	uint32_t dout = _rol(data, shift);
 
 	if(cout)
@@ -36,7 +36,7 @@ static inline uint32_t _ror(uint32_t data, int shift)
 
 static inline uint32_t _ror_c(uint32_t data, int shift, int cin, int* cout)
 {
-	int32_t cmask = _lsl(!!carry, (-shift) - 1);
+	int32_t cmask = _lsl(!!cin, (-shift) - 1);
 	uint32_t dout = _ror(data, shift);
 
 	if(cout)
