@@ -55,7 +55,7 @@ static inline int32_t _bits_sext(int32_t data, uint8_t msb, uint8_t lsb)
 }
 */
 
-static int _in_bounds(int check, int size, int min, int max)
+static inline int _in_bounds(int check, int size, int min, int max)
 {
 	return((check >= min) && (check <= (max - size)));
 }

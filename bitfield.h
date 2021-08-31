@@ -16,15 +16,20 @@
 
 #define _BV(_bit)								_LSL(1U, _bit)
 
-#define BCLR(_data, _bit)						((_data) & ~_BV(_bit))
+#define _BCLR(_data, _bit)						((_data) & ~_BV(_bit))
+#define BCLR(_data, _bit)						_data = _BCLR(_data, _bit)
+
 #define BEXT(_data, _bit)						(_LSR(_data, _bit) & 1)
 
-#define BMAS(_data, _bit, _set)	\
-		BSET_AS(BCLR(_data, _bit), _bit, _set)
+#define BMAS(_data, _bit, _set) \
+		BSET_AS(_BCLR(_ddata, _bit), _bit, _set)
 
 #define BMOV(_data, _from, _to)					_LSL(BEXT(_data, _from), _to)
-#define BSET(_data, _bit)						((_data) | _BV(_bit))
-#define BSET_AS(_data, _bit, _set)				((_data) | _LSL(!!(_set), _bit))
+
+#define BSET(_data, _bit)						((_data) |= _BV(_bit))
+#define _BSET_AS(_data, _bit, _set)				((_data) | _LSL(!!(_set), _bit))
+#define BSET_AS(_data, _bit, _set)				(_data = _BSET_AS(_data, _bit, _set))
+
 #define BTST(_data, _bit)						((_data) & _BV(_bit))
 
 /* bitfield operations */
@@ -46,7 +51,8 @@
 #define xBFCLR(_data, _pos, _bits)				((_data) & _BFC(_pos, _bits))
 #define xBFEXT(_data, _pos, _bits)				(_LSR(_data, _pos) & _BM(_bits))
 #define xBFEXTs(_data, _pos, _bits)				_ASR(_BFLJ(_data, _pos, _bits), -_bits)
-#define xBFINS(_data, _ins, _pos, _bits)			(xBFCLR(_data, _pos, _bits) | _LSL(xBFCLR(_ins, 0, _bits), _pos))
+#define xBFINS(_data, _ins, _pos, _bits)		(xBFCLR(_data, _pos, _bits) | _LSL(xBFEXT(_ins, 0, _bits), _pos))
+
 #define xBFMOV(_data, _pos, _bits, _to)			_LSL(xBFEXT(_data, _pos, _bits), _to)
 #define xBFTST(_data, _pos, _bits)				((_data) & __BF(_pos, _bits))
 
