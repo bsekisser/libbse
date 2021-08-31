@@ -17,12 +17,12 @@
 #define _BV(_bit)								_LSL(1U, _bit)
 
 #define _BCLR(_data, _bit)						((_data) & ~_BV(_bit))
-#define BCLR(_data, _bit)						_data = _BCLR(_data, _bit)
+#define BCLR(_data, _bit)						(_data = _BCLR(_data, _bit))
 
 #define BEXT(_data, _bit)						(_LSR(_data, _bit) & 1)
 
 #define BMAS(_data, _bit, _set) \
-		BSET_AS(_BCLR(_ddata, _bit), _bit, _set)
+		BSET_AS(_BCLR(_data, _bit), _bit, _set)
 
 #define BMOV(_data, _from, _to)					_LSL(BEXT(_data, _from), _to)
 
