@@ -21,8 +21,14 @@
 
 #define BEXT(_data, _bit)						(_LSR(_data, _bit) & 1)
 
-#define BMAS(_data, _bit, _set) \
-		BSET_AS(_BCLR(_data, _bit), _bit, _set)
+#define _BMAS(_data, _bit, _set) \
+		({ \
+			typeof(_data) _ddata = _BCLR(_data, _bit); \
+			BSET_AS(_ddata, _bit, _set); \
+			_ddata; \
+		})
+
+#define BMAS(_data, _bit, _set)					(_data = _BMAS(_data, _bit, _set))
 
 #define BMOV(_data, _from, _to)					_LSL(BEXT(_data, _from), _to)
 
