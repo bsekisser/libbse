@@ -38,31 +38,28 @@
 
 #define BTST(_data, _bit)						((_data) & _BV(_bit))
 
-/* bitfield operations */
+/* helper bitfield operations */
 
 #define __BF(_pos, _bits)						(_LSL(_BM(_bits), _pos))
 #define _BFC(_pos, _bits)						(~__BF(_pos, _bits))
 #define _BFLJ(_data, _pos, _bits)				_LSL(_data, -((_pos) + (_bits)))
-
-#define _MLBF(_msb, _lsb)						__BF(_lsb, MSB_LSB_TO_BITS(_msb, _lsb))
-#define _MLBFC(_data, _msb, _lsb)				xBFCLR(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
-#define _MLBFI(_data, _src, _msb, _lsb)			xBFINS(_data, _src, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
-#define _MLBFMOV(_data, _msb, _lsb, _to)		xBFMOV(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb), _to)
-#define _MLBFSEXT(_data, _msb, _lsb)			xBFEXTs(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
-#define _MLBFTST(_data, _msb, _lsb)				xBFTST(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
-#define _MLBFX(_data, _msb, _lsb)				xBFEXT(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
-
 #define _BM(_bits)								(~_LSL(~0U, _bits))
 
-#define xBFCLR(_data, _pos, _bits)				((_data) & _BFC(_pos, _bits))
-#define xBFEXT(_data, _pos, _bits)				(_LSR(_data, _pos) & _BM(_bits))
-#define xBFEXTs(_data, _pos, _bits)				_ASR(_BFLJ(_data, _pos, _bits), -_bits)
-#define xBFINS(_data, _ins, _pos, _bits)		(xBFCLR(_data, _pos, _bits) | _LSL(xBFEXT(_ins, 0, _bits), _pos))
+/* msb-to-lsb bitfield operations */
 
-#define xBFMOV(_data, _pos, _bits, _to)			_LSL(xBFEXT(_data, _pos, _bits), _to)
-#define xBFTST(_data, _pos, _bits)				((_data) & __BF(_pos, _bits))
+#define mlBF(_msb, _lsb)						__BF(_lsb, MSB_LSB_TO_BITS(_msb, _lsb))
+#define mlBFCLR(_data, _msb, _lsb)				pbBFCLR(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
+#define mlBFEXT(_data, _msb, _lsb)				pbBFEXT(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
+#define mlBFEXTs(_data, _msb, _lsb)				pbBFEXTs(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
+#define mlBFINS(_data, _src, _msb, _lsb)		pbBFINS(_data, _src, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
+#define mlBFMOV(_data, _msb, _lsb, _to)			pbBFMOV(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb), _to)
+#define mlBFTST(_data, _msb, _lsb)				pbBFTST(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
 
-#define _BF __BF
-#define BFCLR(_data, _pos, _bits) xBFCLR(_data, _pos, _bits)
-#define BFEXT(_data, _pos, _bits) xBFEXT(_data, _pos, _bits)
-#define BFEXTS(_data, _pos, _bits) xBFEXTs(_data, _pos, _bits)
+/* pos-bits bitfield operations */
+
+#define pbBFCLR(_data, _pos, _bits)				((_data) & _BFC(_pos, _bits))
+#define pbBFEXT(_data, _pos, _bits)				(_LSR(_data, _pos) & _BM(_bits))
+#define pbBFEXTs(_data, _pos, _bits)			_ASR(_BFLJ(_data, _pos, _bits), -_bits)
+#define pbBFINS(_data, _ins, _pos, _bits)		(pbBFCLR(_data, _pos, _bits) | _LSL(pbBFEXT(_ins, 0, _bits), _pos))
+#define pbBFMOV(_data, _pos, _bits, _to)		_LSL(pbBFEXT(_data, _pos, _bits), _to)
+#define pbBFTST(_data, _pos, _bits)				((_data) & __BF(_pos, _bits))
