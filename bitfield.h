@@ -33,7 +33,7 @@
 #define BMOV(_data, _from, _to)					_LSL(BEXT(_data, _from), _to)
 
 #define _BSET(_data, _bit)						((_data) | _BV(_bit))
-#define BSET(_data, _bit)						(_data |= _BSET(_bit))
+#define BSET(_data, _bit)						(_data = _BSET(_data, _bit))
 
 #define _BSET_AS(_data, _bit, _set)				((_data) | _LSL(!!(_set), _bit))
 #define BSET_AS(_data, _bit, _set)				(_data = _BSET_AS(_data, _bit, _set))
