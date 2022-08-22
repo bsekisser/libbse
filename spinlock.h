@@ -24,14 +24,18 @@ static inline void _spin_set(spin_p lock, char bit) {
 		_set(lock, bit);
 }
 
-static inline void _spin_wait_till_set(spin_p lock, char bit) {
-	while(!_check(lock, bit))
-		;
+static inline void _spin_wait_till_set(spin_p lock, char bit, int sleep) {
+	while(!_check(lock, bit)) {
+		if(sleep)
+			usleep(10);
+	}
 }
 
-static inline void _spin_wait_till_clear(spin_p lock, char bit) {
-	while(_check(lock, bit))
-		;
+static inline void _spin_wait_till_clear(spin_p lock, char bit, int sleep) {
+	while(_check(lock, bit)) {
+		if(sleep)
+			usleep(10);
+	}
 }
 
 /* **** */
@@ -99,24 +103,48 @@ static inline void spin_clear_request(spin_p lock) {
 	_clear(lock, _spin_request);
 }
 
-static inline void spin_lock_request(spin_p lock) {
+static inline void _sleep_spin_lock_request(spin_p lock, int sleep) {
 	_spin_set(lock, _spin_request);
-	_spin_wait_till_set(lock, _spin_granted);
+	_spin_wait_till_set(lock, _spin_granted, sleep);
+}
+
+static inline void sleep_lock_request(spin_p lock) {
+	_sleep_spin_lock_request(lock, 1);
+}
+
+static inline void spin_lock_request(spin_p lock) {
+	_sleep_spin_lock_request(lock, 0);
 }
 
 static inline int spin_lock_requested(spin_p lock) {
 	return(_check(lock, _spin_request));
 }
 
-static inline void spin_lock_granted(spin_p lock) {
+static inline void _sleep_spin_lock_granted(spin_p lock, int sleep) {
 	_spin_set(lock, _spin_granted);
-	_spin_wait_till_clear(lock, _spin_request);
+	_spin_wait_till_clear(lock, _spin_request, 1);
+}
+
+static inline void sleep_lock_granted(spin_p lock) {
+	_sleep_spin_lock_granted(lock, 1);
+}
+
+static inline void spin_lock_granted(spin_p lock) {
+	_sleep_spin_lock_granted(lock, 0);
+}
+
+static inline void _sleep_spin_yeild_request(spin_p lock, int sleep) {
+	if(_check(lock, _spin_request))
+	{
+		_sleep_spin_lock_granted(lock, sleep);
+		_clear(lock, _spin_granted);
+	}
 }
 
 static inline void spin_yeild_request(spin_p lock) {
-	if(_check(lock, _spin_request))
-	{
-		spin_lock_granted(lock);
-		_clear(lock, _spin_granted);
-	}
+	_sleep_spin_yeild_request(lock, 0);
+}
+
+static inline void sleep_yeild_request(spin_p lock) {
+	_sleep_spin_yeild_request(lock, 1);
 }
