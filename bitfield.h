@@ -1,7 +1,12 @@
 #define _ASR(_data, _bits)						_LSR((signed)_data, _bits)
-#define _LSL(_data, _bits)						((_data) << ((_bits) & 0x1f))
-#define _LSR(_data, _bits)						((_data) >> ((_bits) & 0x1f))
 
+#ifdef _SHIFT_UNMASKED
+	#define _LSL(_data, _bits)						((_data) << (_bits))
+	#define _LSR(_data, _bits)						((_data) >> (_bits))
+#else
+	#define _LSL(_data, _bits)						((_data) << ((_bits) & ((sizeof(_data) << 3) - 1)))
+	#define _LSR(_data, _bits)						((_data) >> ((_bits) & ((sizeof(_data) << 3) - 1)))
+#endif
 
 #define MSB_LSB_TO_BITS(_msb, _lsb) \
 	(1 + (_msb - _lsb))
@@ -40,6 +45,15 @@
 
 #define BTST(_data, _bit)						((_data) & _BV(_bit))
 
+#define BXCG(_data, _bit, _set) \
+		({ \
+			typeof(_data) _was_set = BEXT(_data, _bit); \
+			BCLR(_data, _bit); \
+			if(_set) \
+				BSET(_data, _bit); \
+			_was_set; \
+		})
+
 /* helper bitfield operations */
 
 #define pbBF(_pos, _bits)						(_LSL(_BM(_bits), _pos))
@@ -55,6 +69,7 @@
 #define mlBFEXTs(_data, _msb, _lsb)				pbBFEXTs(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
 #define mlBFINS(_data, _src, _msb, _lsb)		pbBFINS(_data, _src, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
 #define mlBFMOV(_data, _msb, _lsb, _to)			pbBFMOV(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb), _to)
+#define mlBFMOVs(_data, _msb, _lsb, _to)		pbBFMOVs(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb), _to)
 #define mlBFTST(_data, _msb, _lsb)				pbBFTST(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
 
 /* pos-bits bitfield operations */
@@ -64,4 +79,5 @@
 #define pbBFEXTs(_data, _pos, _bits)			_ASR(_BFLJ(_data, _pos, _bits), -_bits)
 #define pbBFINS(_data, _ins, _pos, _bits)		(pbBFCLR(_data, _pos, _bits) | _LSL(pbBFEXT(_ins, 0, _bits), _pos))
 #define pbBFMOV(_data, _pos, _bits, _to)		_LSL(pbBFEXT(_data, _pos, _bits), _to)
+#define pbBFMOVs(_data, _pos, _bits, _to)		_LSL(_ASR(_BFLJ(_data, _pos, _bits), -_bits), _to)
 #define pbBFTST(_data, _pos, _bits)				((_data) & pbBF(_pos, _bits))

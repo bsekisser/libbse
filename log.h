@@ -1,6 +1,15 @@
+#pragma once
+
+/* **** system includes */
+
+#include <stdio.h>
+
+/* **** */
+
+//		printf("%s:%s:%u: " _f, __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);
 #define LOG_START(_f, ...) \
 	({ \
-		printf("%s:%s:%u: " _f, __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__); \
+		printf("%s:%u: " _f, __FUNCTION__, __LINE__, ##__VA_ARGS__); \
 	})
 
 #define _LOG_(_f, ...) \

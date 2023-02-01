@@ -1,5 +1,11 @@
 #pragma once
 
+/* **** */
+
+#include <stdlib.h>
+
+/* **** */
+
 typedef struct qelem_t* qelem_p;
 typedef struct qelem_t {
 	qelem_p		next;
