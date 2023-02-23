@@ -50,9 +50,10 @@ static inline void queue_exit(queue_p q)
 	free(q);
 }
 
-static inline queue_p queue_init(void)
+static inline queue_p queue_init(queue_p q)
 {
-	queue_p q = (queue_p)malloc(sizeof(queue_t));
+	if(!q)
+		q = (queue_p)malloc(sizeof(queue_t));
 
 	q->head = 0;
 	q->tail = 0;

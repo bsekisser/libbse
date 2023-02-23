@@ -59,7 +59,8 @@
 #define pbBF(_pos, _bits)						(_LSL(_BM(_bits), _pos))
 #define _BFC(_pos, _bits)						(~pbBF(_pos, _bits))
 #define _BFLJ(_data, _pos, _bits)				_LSL(_data, -((_pos) + (_bits)))
-#define _BM(_bits)								(~_LSL(~0U, _bits))
+#define _BF(_bits)								_LSL(~0U, _bits)
+#define _BM(_bits)								(~_BF(_bits))
 
 /* msb-to-lsb bitfield operations */
 

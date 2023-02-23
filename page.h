@@ -1,3 +1,5 @@
+#pragma once
+
 #define PAGE(_x)		((_x) >> PAGE_SHIFT)
 #define PAGES(_x)		(PAGE_ALIGN(_x) >> PAGE_SHIFT)
 #define PAGE_ALIGN(_x)	(((_x) + PAGE_SIZE - 1) & PAGE_MASK)
