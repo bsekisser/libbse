@@ -76,7 +76,7 @@ __STATIC__ __INLINE__ int _asr_c_v1(long int data,
 		if(shift < __SIZEOF_DATA__) {
 			*cout = (data >> (shift - 1));
 		} else
-			*cout = !!(data & (1 << __SIZEOF_DATA_MASK__));
+			*cout = !!(data & (1UL << __SIZEOF_DATA_MASK__));
 	} else
 		*cout = 0;
 
