@@ -1,8 +1,7 @@
 #include <stdlib.h>
 
 static void* handle_calloc(void** h, size_t nmemb, size_t size) {
-	if(0 == h)
-		return(0);
+	if(0 == h)=
 
 	void* p = calloc(nmemb, size);
 	*h = p;
@@ -11,8 +10,7 @@ static void* handle_calloc(void** h, size_t nmemb, size_t size) {
 }
 
 static void* handle_malloc(void** h, size_t size) {
-	if(0 == h)
-		return(0);
+	assert(0 != h);
 
 	void* p = malloc(size);
 	*h = p;
