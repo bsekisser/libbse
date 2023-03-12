@@ -1,5 +1,11 @@
 #pragma once
 
+/* **** */
+
+#include <stdint.h>
+
+/* **** */
+
 static inline uint16_t bswap16(uint16_t data)
 {
 	return((data >> 8) | (data << 8));

@@ -1,3 +1,11 @@
+#pragma once
+
+/* **** */
+
+#include <unistd.h>
+
+/* **** */
+
 typedef volatile char spin_t;
 typedef spin_t* spin_p;
 
@@ -122,7 +130,8 @@ static inline int spin_lock_requested(spin_p lock) {
 
 static inline void _sleep_spin_lock_granted(spin_p lock, int sleep) {
 	_spin_set(lock, _spin_granted);
-	_spin_wait_till_clear(lock, _spin_request, 1);
+//	_spin_wait_till_clear(lock, _spin_request, 1);
+	_spin_wait_till_clear(lock, _spin_request, sleep);
 }
 
 static inline void sleep_lock_granted(spin_p lock) {

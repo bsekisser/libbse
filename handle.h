@@ -1,3 +1,10 @@
+/* **** */
+
+#include "log.h"
+
+/* **** */
+
+#include <stdio.h>
 #include <stdlib.h>
 
 #define HANDLE_CALLOC(_h, _nmemb, _size) handle_calloc((void**)_h, _nmemb, _size)
@@ -24,8 +31,11 @@ static inline void* handle_malloc(void** h, size_t size) {
 
 #define HANDLE_FREE(_h) handle_free((void**)_h)
 static inline void handle_free(void** h) {
-	assert(0 != h);
-	assert(0 != *h);
+	if(0 == h)
+		LOG_ACTION(return);
+
+	if(0 == *h)
+		LOG_ACTION(return);
 
 	free(*h);
 	*h = 0;

@@ -1,3 +1,5 @@
+#pragma once
+
 #define _ASR(_data, _bits)						_LSR((signed)_data, _bits)
 
 #ifdef _SHIFT_UNMASKED
@@ -26,13 +28,6 @@
 
 #define BEXT(_data, _bit)						(_LSR(_data, _bit) & 1)
 
-#define _BMAS(_data, _bit, _set) \
-		({ \
-			typeof(_data) _ddata = _BCLR(_data, _bit); \
-			BSET_AS(_ddata, _bit, _set); \
-			_ddata; \
-		})
-
 #define BMAS(_data, _bit, _set)					(_data = _BMAS(_data, _bit, _set))
 
 #define BMOV(_data, _from, _to)					_LSL(BEXT(_data, _from), _to)
@@ -44,15 +39,6 @@
 #define BSET_AS(_data, _bit, _set)				(_data = _BSET_AS(_data, _bit, _set))
 
 #define BTST(_data, _bit)						((_data) & _BV(_bit))
-
-#define BXCG(_data, _bit, _set) \
-		({ \
-			typeof(_data) _was_set = BEXT(_data, _bit); \
-			BCLR(_data, _bit); \
-			if(_set) \
-				BSET(_data, _bit); \
-			_was_set; \
-		})
 
 /* helper bitfield operations */
 
@@ -82,3 +68,19 @@
 #define pbBFMOV(_data, _pos, _bits, _to)		_LSL(pbBFEXT(_data, _pos, _bits), _to)
 #define pbBFMOVs(_data, _pos, _bits, _to)		_LSL(_ASR(_BFLJ(_data, _pos, _bits), -_bits), _to)
 #define pbBFTST(_data, _pos, _bits)				((_data) & pbBF(_pos, _bits))
+
+/* **** */
+
+#define _BMAS(_data, _bit, _set) _bitfield_bmas(_data, _bit, _set)
+static inline uint _bitfield_bmas(uint data, uint bit, uint set) {
+	BCLR(data, bit);
+	BSET_AS(data, bit, set);
+	return(data);
+}
+
+#define BXCG(_data, _bit, _set) _bitfield_bxcg(_data, _bit, _set)
+static inline uint _bitfield_bxcg(uint* p2data, uint bit, uint set) {
+	uint was_set = BEXT(*p2data, bit);
+	BMAS(*p2data, bit, set);
+	return(was_set); \
+}

@@ -7,11 +7,11 @@ typedef struct trace_t {
     int				line;
 }trace_t;
 
-#define TRACE(_f, _args...) \
-    ({ \
+#define TRACE(_f, ...) \
+    { \
 	trace_t trace; \
-	TRACE_T_TRACE(TRACE_T(), _f, ##_args); \
-    })
+	TRACE_T_TRACE(TRACE_T(), _f, __VA_ARGS__); \
+    }
 
 static trace_p _trace_enter(trace_p trace, const char* file, const char* function, const int line)
 {
@@ -22,15 +22,15 @@ static trace_p _trace_enter(trace_p trace, const char* file, const char* functio
 }
 
 #define TRACE_T() \
-    _trace_enter(&trace, __FILE__, __FUNCTION__, __LINE__ )
+    _trace_enter(&trace, __FILE__, __func__, __LINE__ )
     
-#define TRACE_T_TRACE(_trace, _f, _args...) \
-    ({ \
-	printf("%s:%s:@%06u: " _f "\n", _trace->file, _trace->function, _trace->line, ##_args); \
-    })
+#define TRACE_T_TRACE(_trace, _f, ...) \
+    { \
+	printf("%s:%s:@%06u: " _f "\n", _trace->file, _trace->function, _trace->line, __VA_ARGS__); \
+    }
 
 #define TRACE_IF_ABORT(_test) \
-    ({ \
+    { \
 	if(_test) \
 	    TRACE("%s", #_test); \
-    })
+    }

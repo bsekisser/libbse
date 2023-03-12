@@ -107,9 +107,11 @@ void callback_list_register_callback(callback_list_p cbl, callback_fn fn, void* 
 {
 	switch(cbl->type) {
 		case LIST_FIFO:
-			return(_register_callback_fifo(cbl, fn, param));
+			_register_callback_fifo(cbl, fn, param);
+			break;
 		case LIST_LIFO:
-			return(_register_callback_lifo(cbl, fn, param));
+			_register_callback_lifo(cbl, fn, param);
+			break;
 		default:
 			LOG_ACTION(abort());
 	}

@@ -22,7 +22,7 @@
 /* **** */
 
 //__STATIC__ __INLINE__ unsigned long int _asr(unsigned long int data, unsigned long int shift);
-/*FAIL*///#define _asr _asr_v1
+/*FAIL*///#define _asr _asr_v1_masked
 /*PASS:BEST*/#define _asr _asr_v2
 
 //__STATIC__ __INLINE__ unsigned long int _asr_c(unsigned long int data, unsigned long int shift, long int* cout);
@@ -33,7 +33,7 @@
 /*PASS:BEST*/#define _asr_c _asr_c_v5
 
 //__STATIC__ __INLINE__ unsigned long int _lsl(unsigned long int data, unsigned long int shift);
-/*FAIL*///#define _lsl _lsl_v1
+/*FAIL*///#define _lsl _lsl_v1_masked
 /*PASS:BEST*/#define _lsl _lsl_v2
 
 //__STATIC__ __INLINE__ unsigned long int _lsl_c(long int data, unsigned long int shift, long int* cout);
@@ -43,9 +43,9 @@
 /*PASS*///#define _lsl_c _lsl_c_v4
 
 //__STATIC__ __INLINE__ unsigned long int _lsr(unsigned long int data, unsigned long int shift);
-__STATIC__ __INLINE__ unsigned long int _lsr_v1(unsigned long int data, unsigned long int shift);
+__STATIC__ __INLINE__ unsigned long int _lsr_v1_masked(unsigned long int data, unsigned long int shift);
 __STATIC__ __INLINE__ unsigned long int _lsr_v2(unsigned long int data, unsigned long int shift);
-/*FAIL*///#define _lsr _lsr_v1
+/*FAIL*///#define _lsr _lsr_v1_masked
 /*PASS:BEST*/#define _lsr _lsr_v2
 
 __STATIC__ __INLINE__ unsigned long int _lsr_c_v2(unsigned long int data, unsigned long int shift, unsigned long int* cout);
@@ -56,7 +56,7 @@ __STATIC__ __INLINE__ unsigned long int _lsr_c_v2(unsigned long int data, unsign
 #define __SIZEOF_DATA__ (sizeof(data) << 3)
 #define __SIZEOF_DATA_MASK__ (__SIZEOF_DATA__ - 1)
 
-__STATIC__ __INLINE__ int _asr_v1(long int data, unsigned long int shift)
+__STATIC__ __INLINE__ int _asr_v1_masked(long int data, unsigned long int shift)
 {
 	return(data >> (shift & __SIZEOF_DATA_MASK__));
 }
@@ -76,7 +76,7 @@ __STATIC__ __INLINE__ int _asr_c_v1(long int data,
 		if(shift < __SIZEOF_DATA__) {
 			*cout = (data >> (shift - 1));
 		} else
-			*cout = !!(data & (1UL << __SIZEOF_DATA_MASK__));
+			*cout = !!(data & (1 << __SIZEOF_DATA_MASK__));
 	} else
 		*cout = 0;
 
@@ -155,10 +155,10 @@ __STATIC__ __INLINE__ int _asr_c_v5(int data,
 
 /* **** */
 
-__STATIC__ __INLINE__ unsigned long int _lsl_v1(unsigned long int data,
+__STATIC__ __INLINE__ unsigned long int _lsl_v1_masked(unsigned long int data,
 	unsigned long int shift)
 {
-	return(data << (shift & 0x1f));
+	return(data << (shift & __SIZEOF_DATA_MASK__));
 }
 
 __STATIC__ __INLINE__ unsigned long int _lsl_v2(unsigned long int data,
@@ -186,7 +186,7 @@ __STATIC__ __INLINE__ unsigned long int _lsl_c_v2(unsigned long int data,
 	unsigned long int* cout)
 {
 	if(shift && (shift <= __SIZEOF_DATA__))
-		*cout = _lsr_v1(data, shift - 1) & 1;
+		*cout = _lsr_v1_masked(data, shift - 1) & 1;
 	else
 		*cout = 0;
 
@@ -222,7 +222,7 @@ __STATIC__ __INLINE__ unsigned long int _lsl_c_v5(unsigned long int data,
 
 /* **** */
 
-__STATIC__ __INLINE__ unsigned long int _lsr_v1(unsigned long int data,
+__STATIC__ __INLINE__ unsigned long int _lsr_v1_masked(unsigned long int data,
 	unsigned long int shift)
 {
 	return(data >> (shift & __SIZEOF_DATA_MASK__));
@@ -239,9 +239,9 @@ __STATIC__ __INLINE__ unsigned long int _lsr_c_v1(unsigned long int data,
 	unsigned long int* cout)
 {
 	if(cout)
-		*cout = _lsr_v1(data, shift - 1) & 1;
+		*cout = _lsr_v1_masked(data, shift - 1) & 1;
 
-	return(_lsr_v1(data, shift));
+	return(_lsr_v1_masked(data, shift));
 }
 
 __STATIC__ __INLINE__ unsigned long int _lsr_c_v2(unsigned long int data,
@@ -260,7 +260,7 @@ __STATIC__ __INLINE__ unsigned long int _lsr_c_v2(unsigned long int data,
 __STATIC__ __INLINE__ unsigned long int _rol_v1(unsigned long int data,
 	unsigned long int shift)
 {
-	return(_lsl_v2(data, shift) | _lsr_v1(data, -shift));
+	return(_lsl_v2(data, shift) | _lsr_v1_masked(data, -shift));
 }
 
 __STATIC__ __INLINE__ unsigned long int _rol_v2(unsigned long int data,
@@ -295,7 +295,7 @@ __STATIC__ __INLINE__ unsigned long int _rol_c(unsigned long int data,
 __STATIC__ __INLINE__ unsigned long int _ror_v1(unsigned long int data,
 	unsigned long int shift)
 {
-	return(_lsl_v1(data, -shift) | _lsr_v1(data, shift));
+	return(_lsl_v1_masked(data, -shift) | _lsr_v1_masked(data, shift));
 }
 
 __STATIC__ __INLINE__ unsigned long int _ror_v2(unsigned long int data,
@@ -345,7 +345,7 @@ __STATIC__ __INLINE__ unsigned long int _ror_v8(unsigned long int data,
 __STATIC__ __INLINE__ unsigned long int _ror_v9(unsigned long int data,
 	unsigned long int shift)
 {
-	return(_lsl_v1(data, __SIZEOF_DATA__ - shift) | _lsr_v1(data, shift));
+	return(_lsl_v1_masked(data, __SIZEOF_DATA__ - shift) | _lsr_v1_masked(data, shift));
 }
 
 __STATIC__ __INLINE__ unsigned long int _ror_c(unsigned long int data,
@@ -353,7 +353,7 @@ __STATIC__ __INLINE__ unsigned long int _ror_c(unsigned long int data,
 	unsigned long int cin,
 	unsigned long int* cout)
 {
-	unsigned long int cmask = _lsl_v1(!!cin, (-shift) - 1);
+	unsigned long int cmask = _lsl_v1_masked(!!cin, (-shift) - 1);
 	unsigned long int dout = _ror_v1(data, shift);
 
 	if(cout)

@@ -1,4 +1,10 @@
+
 #define __GNU_SOURCE
+
+#include "dtime.h"
+#include "log.h"
+
+/* **** */
 
 #include <inttypes.h>
 #include <time.h> // clock_gettime
@@ -6,7 +12,7 @@
 #include <stdio.h> // printf
 #include <stdint.h>
 
-#include "dtime.h"
+/* **** */
 
 static uint64_t calibrate_get_dtime_loop(void)
 {
@@ -38,7 +44,7 @@ uint64_t dtime_calibrate(void)
 	uint64_t elapsedTime, ecdt;
 	double emhz;
 
-	printf("%s: calibrate_get_dtime_cycles(%016" PRIu64 ")\n", __FUNCTION__, cycleTime);
+	printf("%s: calibrate_get_dtime_cycles(%016" PRIu64 ")\n", __func__, cycleTime);
 
 	elapsedTime = 0;
 
@@ -47,7 +53,7 @@ uint64_t dtime_calibrate(void)
 
 		ecdt = elapsedTime / i;
 		emhz = (double)ecdt / MHz(1.0);
-		printf("%s: elapsed time: %016" PRIu64 ", ecdt: %016" PRIu64 ", estMHz: %010.4f\n", __FUNCTION__, elapsedTime, ecdt, emhz);
+		printf("%s: elapsed time: %016" PRIu64 ", ecdt: %016" PRIu64 ", estMHz: %010.4f\n", __func__, elapsedTime, ecdt, emhz);
 	}
 	return(ecdt);
 }
