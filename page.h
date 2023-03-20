@@ -6,4 +6,4 @@
 #define PAGE_MASK		(~(PAGE_SIZE - 1))
 #define PAGE_OFFSET(_x) ((_x) & (PAGE_SIZE - 1))
 #define PAGE_SHIFT		12
-#define PAGE_SIZE		(1 << PAGE_SHIFT)
+#define PAGE_SIZE		(1U << PAGE_SHIFT)

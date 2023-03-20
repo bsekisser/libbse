@@ -48,7 +48,7 @@
 
 //		return((ts.tv_sec * 1E9) + ts.tv_nsec);
 //		return((ts.tv_sec * ((uint)1E9)) + ts.tv_nsec);
-		return((ts.tv_sec * 1000000000) + ts.tv_nsec);
+		return((((uint64_t)ts.tv_sec) * 1000000000U) + (uint64_t)ts.tv_nsec);
 	}
 #endif
 
