@@ -40,6 +40,7 @@ uint _asr_c(int32_t data, uint shift)
 	return(shift ? (_asr(data, shift - 1) & 1) : 0);
 }
 
+__STATIC__ __INLINE__
 int32_t _asr_vc(int32_t data, uint shift, int32_t* carry_out) {
 	*carry_out = _asr_c(data, shift);
 	return(_asr(data, shift));
