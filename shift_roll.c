@@ -5,6 +5,10 @@
 
 #include <stdio.h>
 
+#ifndef uint
+	typedef unsigned int uint;
+#endif
+
 #include "shift_roll.h"
 
 /* **** */
@@ -49,25 +53,25 @@ static void _test_asr(void) {
 	LOG_ASSERT(0xffffffff, ==, _asr(0x80000000, 32));
 }
 
-static void _test_asr_c(void) {
-	int out_c = 0;
+static void _test_asr_vc(void) {
+	int32_t out_c = 0;
 
 	LOG("asr_c");
-	LOG_ASSERT(0x00000001, ==, _asr_c(0x00000001, 0, &out_c));
+	LOG_ASSERT(0x00000001, ==, _asr_vc(0x00000001, 0, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
-	LOG_ASSERT(0xffffffff, ==, _asr_c(0xffffffff, 0, &out_c));
+	LOG_ASSERT(0xffffffff, ==, _asr_vc(0xffffffff, 0, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
-	LOG_ASSERT(0x00000000, ==, _asr_c(0x00000001, 1, &out_c));
+	LOG_ASSERT(0x00000000, ==, _asr_vc(0x00000001, 1, &out_c));
 	LOG_ASSERT(0x00000001, ==, out_c);
-	LOG_ASSERT(0x00000001, ==, _asr_c(0x40000000, 30, &out_c));
+	LOG_ASSERT(0x00000001, ==, _asr_vc(0x40000000, 30, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
-	LOG_ASSERT(0x00000000, ==, _asr_c(0x40000000, 31, &out_c));
+	LOG_ASSERT(0x00000000, ==, _asr_vc(0x40000000, 31, &out_c));
 	LOG_ASSERT(0x00000001, ==, out_c);
-	LOG_ASSERT(0x00000000, ==, _asr_c(0x40000000, 32, &out_c));
+	LOG_ASSERT(0x00000000, ==, _asr_vc(0x40000000, 32, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
-	LOG_ASSERT(0xffffffff, ==, _asr_c(0x80000000, 31, &out_c));
+	LOG_ASSERT(0xffffffff, ==, _asr_vc(0x80000000, 31, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
-	LOG_ASSERT(0xffffffff, ==, _asr_c(0x80000000, 32, &out_c));
+	LOG_ASSERT(0xffffffff, ==, _asr_vc(0x80000000, 32, &out_c));
 	LOG_ASSERT(0x00000001, ==, out_c);
 }
 
@@ -97,19 +101,19 @@ static void _test_lsl(void) {
 	LOG_ASSERT(0x00000000, ==, _lsl(0x80018001, 32));
 }
 
-static void	_test_lsl_c(void) {
-	uint out_c = 0;
+static void	_test_lsl_vc(void) {
+	uint32_t out_c = 0;
 
 	LOG("lsl_c");
-	LOG_ASSERT(0x80000001, ==, _lsl_c(0x80000001, 0, &out_c));
+	LOG_ASSERT(0x80000001, ==, _lsl_vc(0x80000001, 0, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
-	LOG_ASSERT(0x00000002, ==, _lsl_c(0x80000001, 1, &out_c));
+	LOG_ASSERT(0x00000002, ==, _lsl_vc(0x80000001, 1, &out_c));
 	LOG_ASSERT(0x00000001, ==, out_c);
-	LOG_ASSERT(0x80000000, ==, _lsl_c(0x80000001, 31, &out_c));
+	LOG_ASSERT(0x80000000, ==, _lsl_vc(0x80000001, 31, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
-	LOG_ASSERT(0x00000000, ==, _lsl_c(0x80000001, 32, &out_c));
+	LOG_ASSERT(0x00000000, ==, _lsl_vc(0x80000001, 32, &out_c));
 	LOG_ASSERT(0x00000001, ==, out_c);
-	LOG_ASSERT(0x00000000, ==, _lsl_c(0x80000001, 33, &out_c));
+	LOG_ASSERT(0x00000000, ==, _lsl_vc(0x80000001, 33, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
 }
 
@@ -138,19 +142,19 @@ static void _test_lsr(void) {
 	LOG_ASSERT(0x00000000, ==, _lsr(0x80018001, 32));
 }
 
-static void	_test_lsr_c(void) {
-	uint out_c = 0;
+static void	_test_lsr_vc(void) {
+	uint32_t out_c = 0;
 
 	LOG("lsl_c");
-	LOG_ASSERT(0x80000001, ==, _lsr_c(0x80000001, 0, &out_c));
+	LOG_ASSERT(0x80000001, ==, _lsr_vc(0x80000001, 0, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
-	LOG_ASSERT(0x40000000, ==, _lsr_c(0x80000001, 1, &out_c));
+	LOG_ASSERT(0x40000000, ==, _lsr_vc(0x80000001, 1, &out_c));
 	LOG_ASSERT(0x00000001, ==, out_c);
-	LOG_ASSERT(0x00000001, ==, _lsr_c(0x80000001, 31, &out_c));
+	LOG_ASSERT(0x00000001, ==, _lsr_vc(0x80000001, 31, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
-	LOG_ASSERT(0x00000000, ==, _lsr_c(0x80000001, 32, &out_c));
+	LOG_ASSERT(0x00000000, ==, _lsr_vc(0x80000001, 32, &out_c));
 	LOG_ASSERT(0x00000001, ==, out_c);
-	LOG_ASSERT(0x00000000, ==, _lsr_c(0x80000001, 33, &out_c));
+	LOG_ASSERT(0x00000000, ==, _lsr_vc(0x80000001, 33, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
 }
 
@@ -195,6 +199,7 @@ static uint32_t bstring(uint32_t data, char* p) {
 	return(data);
 }
 
+#if 0
 static void _test_ror_c(void) {
 	char bso[33];
 	uint cout = 0;
@@ -204,22 +209,23 @@ static void _test_ror_c(void) {
 		uint cin = i & 1;
 //		LOG("%01u -- 0x%08x -- %s -- %01u", cin, bstring(_ror_c(-2, i, cin, &cout), bso), bso, cout);
 //		LOG("%01u -- 0x%08x -- %s -- %01u", 1, bstring(_ror_c(0, i, 1, &cout), bso), bso, cout);
-		LOG("%01u -- 0x%08x -- %s -- %01u", cin, bstring(_ror_c_v2(-2, i, cin, &cout), bso), bso, cout);
-		LOG("%01u -- 0x%08x -- %s -- %01u", 1, bstring(_ror_c_v2(0, i, 1, &cout), bso), bso, cout);
+		LOG("%01u -- 0x%08x -- %s -- %01u", cin, bstring(_ror_vc(-2, i, cin, &cout), bso), bso, cout);
+		LOG("%01u -- 0x%08x -- %s -- %01u", 1, bstring(_ror_vc(0, i, 1, &cout), bso), bso, cout);
 	}
 }
+#endif
 
 int main(void) {
-	if(0) {
+	if(1) {
 		_test_asr();
-		_test_asr_c();
+		_test_asr_vc();
 		_test_lsl();
-		_test_lsl_c();
+		_test_lsl_vc();
 		_test_lsr();
-		_test_lsr_c();
+		_test_lsr_vc();
 		_test_rol();
 		_test_ror();
 	}
 	
-	_test_ror_c();
+//	_test_ror_c();
 }
