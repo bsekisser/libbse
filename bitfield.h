@@ -1,6 +1,6 @@
 #pragma once
 
-//#define __bitfield_functions__
+#define __bitfield_functions__
 
 #define _ASR(_data, _bits)						((typeof(_data))_LSR((signed)_data, _bits))
 #define _ASR_MASKED(_data, _bits)				((typeof(_data))_LSR_MASKED((signed)_data, _bits))
