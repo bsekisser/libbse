@@ -46,6 +46,9 @@ static inline void* handle_malloc(void** h, size_t size) {
 
 #define HANDLE_FREE(_h) handle_free((void**)_h)
 static inline void handle_free(void** h) {
+	DEBUG(LOG("h = 0x%08" PRIxPTR ", p = 0x%08" PRIxPTR,
+		(uintptr_t)h, (uintptr_t)(h ? *h : 0)));
+	
 	if(0 == h)
 		LOG_ACTION(return);
 
