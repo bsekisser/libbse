@@ -151,8 +151,7 @@ static inline uint _bitfield_pb_bfmov(uint data, uint pos, uint bits, uint to) {
 
 #define pbBFMOVs(_data, _pos, _bits, _to)		_bitfield_pb_bfmovs((int)_data, _pos, _bits, _to)
 static inline uint _bitfield_pb_bfmovs(uint data, uint pos, uint bits, uint to) {
-	data = _bitfield_pb_bflj(data, pos, bits);
-	data = _ASR(data, -bits);
+	data = _bitfield_pb_bfexts(data, pos, bits);
 	data = _LSL(data, to);
 	return(data);
 }
