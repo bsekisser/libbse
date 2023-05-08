@@ -27,7 +27,7 @@
 
 #define _BV(_bit)								_LSL(1U, _bit)
 
-static inline uint _bitfield_bclr(uint data, uint bit) {
+static inline unsigned _bitfield_bclr(unsigned data, unsigned bit) {
 	return(data & ~_BV(bit));
 }
 #ifdef __bitfield_functions__
@@ -38,7 +38,7 @@ static inline uint _bitfield_bclr(uint data, uint bit) {
 
 #define BCLR(_data, _bit)						(_data = _BCLR(_data, _bit))
 
-static inline uint _bitfield_bext(uint data, uint bit) {
+static inline unsigned _bitfield_bext(unsigned data, unsigned bit) {
 	return(_LSR(data, bit) & 1);
 }
 #ifdef __bitfield_functions__
@@ -47,7 +47,7 @@ static inline uint _bitfield_bext(uint data, uint bit) {
 	#define BEXT(_data, _bit)					(_LSR(_data, _bit) & 1U)
 #endif
 
-static inline uint _bitfield_bset(uint data, uint bit) {
+static inline unsigned _bitfield_bset(unsigned data, unsigned bit) {
 	return(data | _BV(bit));
 }
 #ifdef __bitfield_functions__
@@ -58,8 +58,8 @@ static inline uint _bitfield_bset(uint data, uint bit) {
 
 #define BSET(_data, _bit)						(_data = _BSET(_data, _bit))
 
-static inline uint _bitfield_bset_as(uint data, uint bit, uint set) {
-	return(data | _LSL((uint)(!!(set)), bit));
+static inline unsigned _bitfield_bset_as(unsigned data, unsigned bit, unsigned set) {
+	return(data | _LSL((unsigned)(!!(set)), bit));
 }
 #ifdef __bitfield_functions__
 	#define _BSET_AS(_data, _bit, _set)			_bitfield_bset_as(_data, _bit, _set)
@@ -69,7 +69,7 @@ static inline uint _bitfield_bset_as(uint data, uint bit, uint set) {
 
 #define BSET_AS(_data, _bit, _set)				(_data = _BSET_AS(_data, _bit, _set))
 
-static inline uint _bitfield_btst(uint data, uint bit) {
+static inline unsigned _bitfield_btst(unsigned data, unsigned bit) {
 	return(data & _BV(bit));
 }
 #ifdef __bitfield_functions__
@@ -80,7 +80,7 @@ static inline uint _bitfield_btst(uint data, uint bit) {
 
 /* **** */
 
-static inline uint _bitfield_bmov(uint data, uint from, uint to) {
+static inline unsigned _bitfield_bmov(unsigned data, unsigned from, unsigned to) {
 	data = _bitfield_bext(data, from);
 
 	return(_LSL(data, to));
@@ -97,7 +97,7 @@ static inline uint _bitfield_bmov(uint data, uint from, uint to) {
 #define _BFC(_pos, _bits)						(~pbBF(_pos, _bits))
 
 #define _BFLJ(_data, _pos, _bits)				_bitfield_pb_bflj(_data, _pos, _bits)
-static inline uint _bitfield_pb_bflj(uint data, uint pos, uint bits) {
+static inline unsigned _bitfield_pb_bflj(unsigned data, unsigned pos, unsigned bits) {
 	return(_LSL_MASKED(data, -((pos) + (bits))));
 }
 
@@ -118,24 +118,24 @@ static inline uint _bitfield_pb_bflj(uint data, uint pos, uint bits) {
 /* pos-bits bitfield operations */
 
 #define pbBFCLR(_data, _pos, _bits)				_bitfield_pb_bfclr(_data, _pos, _bits)
-static inline uint _bitfield_pb_bfclr(uint data, uint pos, uint bits) {
+static inline unsigned _bitfield_pb_bfclr(unsigned data, unsigned pos, unsigned bits) {
 	return((data) & _BFC(pos, bits));
 }
 
 #define pbBFEXT(_data, _pos, _bits)				((typeof(_data))_bitfield_pb_bfext(_data, _pos, _bits))
-static inline uint _bitfield_pb_bfext(uint data, uint pos, uint bits) {
+static inline unsigned _bitfield_pb_bfext(unsigned data, unsigned pos, unsigned bits) {
 	return(_LSR(data, pos) & _BM(bits));
 }
 
 #define pbBFEXTs(_data, _pos, _bits)			((typeof(_data))_bitfield_pb_bfexts(_data, _pos, _bits))
-static inline uint _bitfield_pb_bfexts(uint data, uint pos, uint bits) {
+static inline unsigned _bitfield_pb_bfexts(unsigned data, unsigned pos, unsigned bits) {
 	data = _bitfield_pb_bflj(data, pos, bits);
-	data = (uint)_ASR_MASKED((int)data, -bits);
+	data = (unsigned)_ASR_MASKED((int)data, -bits);
 	return(data);
 }
 
 #define pbBFINS(_data, _ins, _pos, _bits)		_bitfield_pb_bfins(_data, _ins, _pos, _bits)
-static inline uint _bitfield_pb_bfins(uint data, uint ins, uint pos, uint bits) {
+static inline unsigned _bitfield_pb_bfins(unsigned data, unsigned ins, unsigned pos, unsigned bits) {
 	data = _bitfield_pb_bfclr(data, pos, bits);
 	ins = _bitfield_pb_bfext(ins, 0, bits);
 	data |= _LSL(ins, pos);
@@ -143,14 +143,14 @@ static inline uint _bitfield_pb_bfins(uint data, uint ins, uint pos, uint bits) 
 }
 
 #define pbBFMOV(_data, _pos, _bits, _to)		_bitfield_pb_bfmov(_data, _pos, _bits, _to)
-static inline uint _bitfield_pb_bfmov(uint data, uint pos, uint bits, uint to) {
+static inline unsigned _bitfield_pb_bfmov(unsigned data, unsigned pos, unsigned bits, unsigned to) {
 	data = _bitfield_pb_bfext(data, pos, bits);
 	data = _LSL(data, to);
 	return(data);
 }
 
 #define pbBFMOVs(_data, _pos, _bits, _to)		_bitfield_pb_bfmovs((int)_data, _pos, _bits, _to)
-static inline uint _bitfield_pb_bfmovs(uint data, uint pos, uint bits, uint to) {
+static inline unsigned _bitfield_pb_bfmovs(unsigned data, unsigned pos, unsigned bits, unsigned to) {
 	data = _bitfield_pb_bfexts(data, pos, bits);
 	data = _LSL(data, to);
 	return(data);
@@ -158,14 +158,14 @@ static inline uint _bitfield_pb_bfmovs(uint data, uint pos, uint bits, uint to) 
 
 
 #define pbBFTST(_data, _pos, _bits)				_bitfield_pb_bftst(_data, _pos, _bits)
-static inline uint _bitfield_pb_bftst(uint data, uint pos, uint bits) {
+static inline unsigned _bitfield_pb_bftst(unsigned data, unsigned pos, unsigned bits) {
 	return(data & pbBF(pos, bits));
 }
 
 /* **** */
 
 #define _BMAS(_data, _bit, _set) _bitfield_bmas(_data, _bit, _set)
-static inline uint _bitfield_bmas(uint data, uint bit, uint set) {
+static inline unsigned _bitfield_bmas(unsigned data, unsigned bit, unsigned set) {
 	data = _bitfield_bclr(data, bit);
 	data = _bitfield_bset_as(data, bit, !!set);
 	return(data);
@@ -173,8 +173,8 @@ static inline uint _bitfield_bmas(uint data, uint bit, uint set) {
 #define BMAS(_data, _bit, _set)					(_data = (typeof(_data))_BMAS(_data, _bit, _set))
 
 #define BXCG(_data, _bit, _set) _bitfield_bxcg(_data, _bit, _set)
-static inline uint _bitfield_bxcg(uint* p2data, uint bit, uint set) {
-	uint was_set = _bitfield_bext(*p2data, bit);
+static inline unsigned _bitfield_bxcg(unsigned* p2data, unsigned bit, unsigned set) {
+	unsigned was_set = _bitfield_bext(*p2data, bit);
 	*p2data = _bitfield_bmas(*p2data, bit, !!set);
 	return(was_set);
 }

@@ -1,7 +1,3 @@
-#ifndef uint
-	typedef unsigned int uint;
-#endif
-
 #define __BSE_LIBRARY_TESTING__
 
 #ifdef __BSE_LIBRARY_TESTING__

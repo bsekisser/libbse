@@ -5,10 +5,6 @@
 
 #include <stdio.h>
 
-#ifndef uint
-	typedef unsigned int uint;
-#endif
-
 #include "shift_roll.h"
 
 /* **** */
@@ -19,14 +15,10 @@
 
 /* **** */
 
-#ifndef uint
-	typedef unsigned int uint;
-#endif
-
 #define LOG_ASSERT(_expect, _test, _action) \
 	({ \
-		uint _result = _action; \
-		uint fail = !(_expect _test _result); \
+		unsigned _result = _action; \
+		unsigned fail = !(_expect _test _result); \
 		\
 		LOG_START(#_expect " " #_test " (0x%08x <-- " #_action ") -- ", _result); \
 		\
@@ -189,7 +181,7 @@ static uint32_t bstring(uint32_t data, char* p) {
 	uint8_t bits = sizeof(data) << 3;
 	char* dst = p;
 
-	for(int i = 1; i <= bits; i++) {
+	for(unsigned i = 1; i <= bits; i++) {
 		uint8_t bit = (bits - i);
 		*dst++ = ((data >> bit) & 1) ? '1' : '0';
 	}
@@ -202,11 +194,11 @@ static uint32_t bstring(uint32_t data, char* p) {
 #if 0
 static void _test_ror_c(void) {
 	char bso[33];
-	uint cout = 0;
+	unsigned cout = 0;
 	
-	for(int i = 0; i <= sizeof(uint32_t) << 3; i++) {
-//		uint cin = (cout = 0 & i & 1);
-		uint cin = i & 1;
+	for(unsigned i = 0; i <= sizeof(uint32_t) << 3; i++) {
+//		unsigned cin = (cout = 0 & i & 1);
+		unsigned cin = i & 1;
 //		LOG("%01u -- 0x%08x -- %s -- %01u", cin, bstring(_ror_c(-2, i, cin, &cout), bso), bso, cout);
 //		LOG("%01u -- 0x%08x -- %s -- %01u", 1, bstring(_ror_c(0, i, 1, &cout), bso), bso, cout);
 		LOG("%01u -- 0x%08x -- %s -- %01u", cin, bstring(_ror_vc(-2, i, cin, &cout), bso), bso, cout);

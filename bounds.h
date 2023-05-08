@@ -1,13 +1,9 @@
 #pragma once
 
-#ifndef uint
-	typedef unsigned int uint;
-#endif
-
-static inline int _in_bounds(uint check, uint size, uint min, uint max)
+static inline unsigned _in_bounds(unsigned check, unsigned size, unsigned min, unsigned max)
 {
 	return((check >= min) && (check <= (max - size)));
 }
 
 #define in_bounds(_check, _size, _min, _max) \
-	_in_bounds((uint)_check, (uint)_size, (uint)_min, (uint)_max)
+	_in_bounds((unsigned)_check, (unsigned)_size, (unsigned)_min, (unsigned)_max)
