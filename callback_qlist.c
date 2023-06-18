@@ -26,32 +26,50 @@
 
 /* **** */
 
+static const char* callback_qlist_type[_LIST_TYPE_COUNT] = {
+	[LIST_NULL] = "XXX",
+	[LIST_FIFO] = "FIFO",
+	[LIST_LIFO] = "LIFO",
+};
+
+/* **** */
+
 static void _callback_qlist_init(callback_qlist_p cbl, unsigned int type)
 {
+	ERR_NULL(cbl);
+
 	if(!type)
 		LOG_ACTION(abort());
 
 	cbl->count = 0;
+
+	ERR_IF(cbl->head);
 	cbl->head = 0;
+
+	ERR_IF(cbl->tail);
 	cbl->tail = 0;
+
 	cbl->type = type;
 
 	DEBUG(LOG_START("-->> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
 	DEBUG(_LOG_(", count = 0x%08x", cbl->count));
-	DEBUG(LOG_END(", type = 0x%08x", cbl->type));
+	DEBUG(LOG_END(", type = 0x%08x -- %s", cbl->type, callback_qlist_type[cbl->type]));
 }
 
 static void _register_callback_fifo(callback_qlist_p cbl,
 	callback_qlist_elem_p cble)
 {
 	DEBUG(LOG_START(">> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
+	DEBUG(_LOG_(", cble = 0x%08" PRIxPTR, (uintptr_t)cble));
 	DEBUG(LOG_END(", count = 0x%08x", cbl->count));
 
 	cble->next = 0;
 	cble->prev = cbl->tail;
 
-	if(cbl->tail)
+	if(cbl->tail) {
+		ERR_IF(cbl->tail->next);
 		cbl->tail->next = cble;
+	}
 
 	if(!cbl->head)
 		cbl->head = cble;
@@ -59,34 +77,33 @@ static void _register_callback_fifo(callback_qlist_p cbl,
 	cbl->tail = cble;
 
 	cbl->count++;
-	DEBUG(LOG_START("-- cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
+	DEBUG(LOG_START("<< cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
 	DEBUG(LOG_END(", count = 0x%08x", cbl->count));
-
-	DEBUG(LOG("<<"));
 }
 
 static void _register_callback_lifo(callback_qlist_p cbl,
 	callback_qlist_elem_p cble)
 {
 	DEBUG(LOG_START(">> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
+	DEBUG(_LOG_(", cble = 0x%08" PRIxPTR, (uintptr_t)cble));
 	DEBUG(LOG_END(", count = 0x%08x", cbl->count));
 
 	cble->next = cbl->head;
 	cble->prev = 0;
-	
-	if(cbl->head)
+
+	if(cbl->head) {
+		ERR_IF(cbl->head->prev);
 		cbl->head->prev = cble;
-	
+	}
+
 	cbl->head = cble;
 
 	if(!cbl->tail)
 		cbl->tail = cble;
 
 	cbl->count++;
-	DEBUG(LOG_START("-- cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
+	DEBUG(LOG_START("<< cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
 	DEBUG(LOG_END(", count = 0x%08x", cbl->count));
-
-	DEBUG(LOG("<<"));
 }
 
 /* **** */
@@ -106,15 +123,19 @@ void callback_qlist_alloc_init(callback_qlist_h h2cbl, unsigned int type)
 
 void callback_qlist_process(callback_qlist_p cbl)
 {
+	ERR_NULL(cbl);
+
 	DEBUG(LOG_START(">> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
 	DEBUG(LOG_END(", count = 0x%08x", cbl->count));
-	
-	callback_qlist_elem_p cble = cbl->head;
-	if(!cble)
-		return;
-	
+
+	callback_qlist_elem_p cble = 0;
+	callback_qlist_elem_p next = cbl->head;
+
 	DEBUG(unsigned i = 0);
-	do{
+	while(next) {
+		cble = next;
+		next = cble->next;
+
 		DEBUG(LOG_START("-- cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
 		DEBUG(_LOG_(", cble = 0x%08" PRIxPTR, (uintptr_t)cble));
 		DEBUG(_LOG_(", count = 0x%08x", cbl->count));
@@ -122,9 +143,7 @@ void callback_qlist_process(callback_qlist_p cbl)
 
 		if(cble->fn)
 			cble->fn(cble->param);
-		
-		cble = cble->next;
-	}while(cble);
+	};
 
 	DEBUG(LOG("<<"));
 }
@@ -132,9 +151,14 @@ void callback_qlist_process(callback_qlist_p cbl)
 void callback_qlist_register_callback(callback_qlist_p cbl,
 	callback_qlist_elem_p cble)
 {
-	assert(0 != cbl);
+	ERR_NULL(cbl);
+	if(0 == cbl->type) {
+		DEBUG(LOG("-- cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
+	}
+
 	assert(0 != cbl->type);
-	assert(0 != cble);
+
+	ERR_NULL(cble);
 
 	switch(cbl->type) {
 		case LIST_FIFO:
