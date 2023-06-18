@@ -1,5 +1,8 @@
+#pragma once
+
 /* **** */
 
+#include "err_test.h"
 #include "log.h"
 
 /* **** */
@@ -14,7 +17,7 @@
 /* **** */
 
 #undef DEBUG
-#define DEBUG(_x) _x 
+//#define DEBUG(_x) _x 
 
 #ifndef DEBUG
 	#define DEBUG(_x)
@@ -23,10 +26,7 @@
 #define HANDLE_CALLOC(_h, _nmemb, _size) handle_calloc((void**)_h, _nmemb, _size)
 static inline void* handle_calloc(void** h, size_t nmemb, size_t size) {
 	ERR_NULL(h);
-
-	if(0 != *h) {
-		LOG_ACTION(exit(-1));
-	}
+	ERR_IF(*h);
 
 	void* p = calloc(nmemb, size);
 	*h = p;
@@ -40,6 +40,7 @@ static inline void* handle_calloc(void** h, size_t nmemb, size_t size) {
 #define HANDLE_MALLOC(_h, _size) handle_malloc((void**)_h, _size)
 static inline void* handle_malloc(void** h, size_t size) {
 	ERR_NULL(h);
+	ERR_IF(*h);
 
 	void* p = malloc(size);
 	*h = p;
@@ -53,7 +54,10 @@ static inline void handle_free(void** h) {
 	
 	DEBUG(LOG_START("h = 0x%08" PRIxPTR, (uintptr_t)h));
 	DEBUG(LOG_END(", p = 0x%08" PRIxPTR, (uintptr_t)p));
-	
+
+	ERR_NULL(h);
+	ERR_NULL(p);
+
 	if(0 == h)
 		LOG_ACTION(return);
 
