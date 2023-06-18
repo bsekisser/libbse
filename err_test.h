@@ -1,3 +1,17 @@
+#pragma once
+
+/* **** */
+
+#include "log.h"
+
+/* **** */
+
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* **** */
+
 #define ERR_LOG(_f, ...) \
 	{ \
 		LOG("%s:: %s:: %04u:: %s::" _f, \
@@ -16,6 +30,7 @@
 	}
 
 #define ERR(_test) _ERR_TEST_ABORT(-1 == (_test))
+#define ERR_IF(_test) _ERR_TEST_ABORT(_test)
 #define ERR_NULL(_test) _ERR_TEST_ABORT(0 == (_test))
 
 #define assert_abort_msg(_test, _msg, ...) \
