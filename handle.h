@@ -26,7 +26,7 @@
 #define HANDLE_CALLOC(_h, _nmemb, _size) handle_calloc((void**)_h, _nmemb, _size)
 static inline void* handle_calloc(void** h, size_t nmemb, size_t size) {
 	ERR_NULL(h);
-	ERR_IF(*h);
+//	ERR_IF(*h);
 
 	void* p = calloc(nmemb, size);
 	*h = p;
@@ -40,7 +40,7 @@ static inline void* handle_calloc(void** h, size_t nmemb, size_t size) {
 #define HANDLE_MALLOC(_h, _size) handle_malloc((void**)_h, _size)
 static inline void* handle_malloc(void** h, size_t size) {
 	ERR_NULL(h);
-	ERR_IF(*h);
+//	ERR_IF(*h);
 
 	void* p = malloc(size);
 	*h = p;

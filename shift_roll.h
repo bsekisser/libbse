@@ -145,7 +145,9 @@ uint32_t _ror_c(uint32_t data, unsigned shift)
 __STATIC__ __INLINE__
 uint32_t _ror_vc(uint32_t data, unsigned shift, uint32_t* carry_out)
 {
-	*carry_out = _ror_c(data, shift);
+	if(carry_out)
+		*carry_out = _ror_c(data, shift - 1);
+
 	return(_ror(data, shift));
 }
 

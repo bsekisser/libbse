@@ -27,56 +27,74 @@
 
 #define _BV(_bit)								_LSL(1U, _bit)
 
+#define __BCLR(_data, _bit) 					(_data & ~_BV(_bit))
 static inline unsigned _bitfield_bclr(unsigned data, unsigned bit) {
-	return(data & ~_BV(bit));
+	return(__BCLR(data, bit));
 }
 #ifdef __bitfield_functions__
 	#define _BCLR(_data, _bit) 					_bitfield_bclr(_data, _bit)
 #else
-	#define _BCLR(_data, _bit) 					(_data & ~_BV(_bit))
+	#define _BCLR __BCLR
 #endif
 
 #define BCLR(_data, _bit)						(_data = _BCLR(_data, _bit))
 
+#define __BEXT(_data, _bit)					(_LSR(_data, _bit) & 1U)
 static inline unsigned _bitfield_bext(unsigned data, unsigned bit) {
-	return(_LSR(data, bit) & 1);
+	return(__BEXT(data, bit));
 }
 #ifdef __bitfield_functions__
 	#define BEXT(_data, _bit)					_bitfield_bext(_data, _bit)
 #else
-	#define BEXT(_data, _bit)					(_LSR(_data, _bit) & 1U)
+	#define BEXT __BEXT
 #endif
 
+#define __BSET(_data, _bit)					(_data | _BV(_bit))
 static inline unsigned _bitfield_bset(unsigned data, unsigned bit) {
-	return(data | _BV(bit));
+	return(__BSET(data, bit));
 }
 #ifdef __bitfield_functions__
 	#define _BSET(_data, _bit)					_bitfield_bset(_data, _bit)
 #else
-	#define _BSET(_data, _bit)					(_data | _BV(_bit))
+	#define _BSET __BSET
 #endif
 
 #define BSET(_data, _bit)						(_data = _BSET(_data, _bit))
 
+#define __BSET_AS(_data, _bit, _set)			(_data | _LSL(!!(_set), _bit))
 static inline unsigned _bitfield_bset_as(unsigned data, unsigned bit, unsigned set) {
-	return(data | _LSL((unsigned)(!!(set)), bit));
+	return(__BSET_AS(data, bit, set));
 }
 #ifdef __bitfield_functions__
 	#define _BSET_AS(_data, _bit, _set)			_bitfield_bset_as(_data, _bit, _set)
 #else
-	#define _BSET_AS(_data, _bit, _set)			(_data | _LSL(!!(_set), _bit))
+	#define _BSET_AS __BSET_AS
 #endif
 
 #define BSET_AS(_data, _bit, _set)				(_data = _BSET_AS(_data, _bit, _set))
 
+
+#define __BTST(_data, _bit)					((_data) & _BV(_bit))
 static inline unsigned _bitfield_btst(unsigned data, unsigned bit) {
-	return(data & _BV(bit));
+	return(__BTST(data, bit));
 }
 #ifdef __bitfield_functions__
 	#define BTST(_data, _bit)					_bitfield_btst(_data, _bit)
 #else
-	#define BTST(_data, _bit)					((_data) & _BV(_bit))
+	#define BTST __BTST
 #endif
+
+#define __BXOR(_data, _bit) 					((_data) ^ _BV(_bit))
+static inline unsigned _bitfield_bxor(unsigned data, unsigned bit) {
+	return(__BXOR(data, bit));
+}
+#ifdef __bitfield_functions__
+	#define _BXOR(_data, _bit) 					_bitfield_bxor(_data, _bit)
+#else
+	#define _BXOR __BXOR
+#endif
+
+#define BXOR(_data, _bit)						(_data = _BXOR(_data, _bit))
 
 /* **** */
 

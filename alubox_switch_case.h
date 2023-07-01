@@ -2,13 +2,11 @@
 
 /* **** */
 
-#include "bitfield.h"
-#include "log.h"
-#include "shift_roll.h"
+#include "alubox_fu_s_parts.h"
 
 /* **** */
 
-#include <stdlib.h>
+#include "log.h"
 
 /* **** */
 
@@ -21,12 +19,15 @@ enum {
 	ALUBOX_EOR,
 	ALUBOX_LSL,
 	ALUBOX_LSR,
+	ALUBOX_MAC,
 	ALUBOX_MOD,
 	ALUBOX_MOV,
 	ALUBOX_MUL,
+	ALUBOX_MUL_ACC,
 	ALUBOX_MVN,
 	ALUBOX_ORR,
 	ALUBOX_ROR,
+	ALUBOX_RRX,
 	ALUBOX_RSB,
 	ALUBOX_RSC,
 	ALUBOX_SBC,
@@ -36,91 +37,82 @@ enum {
 	ALUBOX_BEXT,
 	ALUBOX_BSET,
 	ALUBOX_BTST,
+	ALUBOX_BXOR,
 //
-	ALUBOX_WB = 0x80,
-	ALUBOX_CMN = ALUBOX_WB | ALUBOX_ADD,
-	ALUBOX_CMP = ALUBOX_WB | ALUBOX_SUB,
-	ALUBOX_TEQ = ALUBOX_WB | ALUBOX_EOR,
-	ALUBOX_TST = ALUBOX_WB | ALUBOX_AND,
+	ALUBOX_S = 0x40,
+	ALUBOX_WBx = 0x80,
+//
+	ALUBOX_CMN = ALUBOX_WBx | ALUBOX_S | ALUBOX_ADD,
+	ALUBOX_CMP = ALUBOX_WBx | ALUBOX_S | ALUBOX_SUB,
+	ALUBOX_TEQ = ALUBOX_WBx | ALUBOX_S | ALUBOX_AND,
+	ALUBOX_TST = ALUBOX_WBx | ALUBOX_S | ALUBOX_EOR,
 };
 
-static inline unsigned alubox(unsigned* rd, unsigned op, unsigned s1, unsigned s2)
+static inline unsigned alubox(alubox_p alu, unsigned op, unsigned s1, unsigned s2)
 {
-	unsigned result = 0;
-	unsigned wb = op ^ ALUBOX_WB;
-
 	switch(op & 0x1f) {
 	case ALUBOX_ADC:
+		return(__alubox_fu_s_adc(alu, s1, s2));
 	case ALUBOX_ADD:
-	case ALUBOX_CMN:
-		result = s1 + s2;
-		break;
+		return(__alubox_fu_s_add(alu, s1, s2));
 	case ALUBOX_AND:
-	case ALUBOX_TST:
-		result = s1 & s2;
-		break;
+		return(__alubox_fu_s_and(alu, s1, s2));
 	case ALUBOX_ASR:
-		result = _asr(s1, s2 & 0xff);
-		break;
+		return(__alubox_fu_s_asr(alu, s1, s2));
 	case ALUBOX_BCLR:
-		result = _BCLR(s1, s2);
-		break;
+		return(__alubox_fu_s_bclr(alu, s1, s2));
 	case ALUBOX_BEXT:
-		result = BEXT(s1, s2);
-		break;
+		return(__alubox_fu_s_bext(alu, s1, s2));
 	case ALUBOX_BIC:
-		result = s1 & ~s2;
-		break;
+		return(__alubox_fu_s_bic(alu, s1, s2));
 	case ALUBOX_BSET:
-		result = _BSET(s1, s2);
-		break;
+		return(__alubox_fu_s_bset(alu, s1, s2));
 	case ALUBOX_BTST:
-		result = BTST(s1, s2);
-		break;
+		return(__alubox_fu_s_btst(alu, s1, s2));
+	case ALUBOX_BXOR:
+		return(__alubox_fu_s_bxor(alu, s1, s2));
+	case ALUBOX_CMN:
+		return(__alubox_fu_s_cmn(alu, s1, s2));
 	case ALUBOX_CMP:
-	case ALUBOX_SBC:
-	case ALUBOX_SUB:
-		result = s1 - s2;
-		break;
+		return(__alubox_fu_s_cmp(alu, s1, s2));
 	case ALUBOX_EOR:
-	case ALUBOX_TEQ:
-		result = s1 ^ s2;
-		break;
+		return(__alubox_fu_s_eor(alu, s1, s2));
 	case ALUBOX_LSL:
-		result = _lsl(s1, s2 & 0xff);
-		break;
+		return(__alubox_fu_s_lsl(alu, s1, s2));
 	case ALUBOX_LSR:
-		result = _lsr(s1, s2 & 0xff);
-		break;
+		return(__alubox_fu_s_lsr(alu, s1, s2));
 	case ALUBOX_MOD:
-		result = s1 % s2;
-		break;
+		return(__alubox_fu_s_mod(alu, s1, s2));
 	case ALUBOX_MOV:
-		result = s2;
-		break;
+		return(__alubox_fu_s_mov(alu, s1, s2));
 	case ALUBOX_MUL:
-		result = s1 * s2;
-		break;
+		return(__alubox_fu_s_mul(alu, s1, s2));
+	case ALUBOX_MUL_ACC:
+		return(__alubox_fu_s_mul_acc(alu, s1, s2));
 	case ALUBOX_MVN:
-		result = -s2;
-		break;
+		return(__alubox_fu_s_mvn(alu, s1, s2));
 	case ALUBOX_ORR:
-		result = s1 | s2;
-		break;
-	case ALUBOX_RSB:
-	case ALUBOX_RSC:
-		result = s2 - s1;
-		break;
+		return(__alubox_fu_s_orr(alu, s1, s2));
 	case ALUBOX_ROR:
-		result = _ror(s1, s2);
-		break;
+		return(__alubox_fu_s_ror(alu, s1, s2));
+	case ALUBOX_RRX:
+		return(__alubox_fu_s_rrx(alu, s1, s2));
+	case ALUBOX_RSB:
+		return(__alubox_fu_s_rsb(alu, s1, s2));
+	case ALUBOX_RSC:
+		return(__alubox_fu_s_rsc(alu, s1, s2));
+	case ALUBOX_SBC:
+		return(__alubox_fu_s_sbc(alu, s1, s2));
+	case ALUBOX_SUB:
+		return(__alubox_fu_s_sub(alu, s1, s2));
+	case ALUBOX_TEQ:
+		return(__alubox_fu_s_teq(alu, s1, s2));
+	case ALUBOX_TST:
+		return(__alubox_fu_s_tst(alu, s1, s2));
 	default:
 		LOG("op = 0x%02x", op);
 		LOG_ACTION(exit(-1));
 	}
 
-	if(rd)
-		*rd = result;
-
-	return(wb);
+	return(0xdeadbeef);
 }
