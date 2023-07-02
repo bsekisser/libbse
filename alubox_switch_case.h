@@ -48,7 +48,7 @@ enum {
 	ALUBOX_TST = ALUBOX_WBx | ALUBOX_S | ALUBOX_EOR,
 };
 
-static inline unsigned alubox(alubox_p alu, unsigned op, unsigned s1, unsigned s2)
+extern inline unsigned alubox(alubox_p alu, unsigned op, unsigned s1, unsigned s2)
 {
 	switch(op & 0x1f) {
 	case ALUBOX_ADC:

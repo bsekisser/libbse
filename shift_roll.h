@@ -84,7 +84,10 @@ uint32_t _lsr_masked(uint32_t data, unsigned shift)
 __STATIC__ __INLINE__
 unsigned _lsl_c(uint32_t data, unsigned shift)
 {
-	return(_lsr(data, shift - 1) & 1);
+	if(0 == shift)
+		return(0);
+
+	return(_lsr(_lsl(data, shift - 1), __SIZEOF_DATA_MASK__) & 1);
 }
 
 __STATIC__ __INLINE__
@@ -97,6 +100,9 @@ uint32_t _lsl_vc(uint32_t data, unsigned shift, uint32_t* carry_out)
 __STATIC__ __INLINE__
 unsigned _lsr_c(uint32_t data, unsigned shift)
 {
+	if(0 == shift)
+		return(0);
+
 	return(_lsr(data, shift - 1) & 1);
 }
 
@@ -126,7 +132,10 @@ uint32_t _ror(uint32_t data, unsigned shift)
 __STATIC__ __INLINE__
 uint32_t _rol_c(uint32_t data, unsigned shift)
 {
-	return(_lsr_c(data, shift));
+	if(0 == shift)
+		return(0);
+
+	return(_lsr(_rol(data, shift - 1), __SIZEOF_DATA_MASK__) & 1);
 }
 
 __STATIC__ __INLINE__
@@ -139,7 +148,10 @@ uint32_t _rol_vc(uint32_t data, unsigned shift, uint32_t* carry_out)
 __STATIC__ __INLINE__
 uint32_t _ror_c(uint32_t data, unsigned shift)
 {
-	return(_lsr_c(data, shift));
+	if(0 == shift)
+		return(0);
+
+	return(_ror(data, shift - 1) & 1);
 }
 
 __STATIC__ __INLINE__

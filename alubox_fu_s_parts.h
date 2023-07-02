@@ -15,6 +15,8 @@
 
 /* **** */
 
+#define __unsigned_bits ((sizeof(unsigned) << 3) - 1)
+
 typedef struct alubox_psr_t* alubox_psr_p;
 typedef struct alubox_psr_t {
 	union {
@@ -48,34 +50,44 @@ static inline unsigned __alubox_fu__flags_nz(alubox_p alu, unsigned result)
 {
 	if(alu && alu->flags.s) {
 		alu->result = result;
-		
-		alu->psr.n = BEXT(result, 31);
+
+		alu->psr.n = BEXT(result, __unsigned_bits);
 		alu->psr.z = (0 == result);
 	}
 
 	return(result);
 }
 
-static inline unsigned __alubox_fu__flags_nz_s_wb(alubox_p alu, unsigned result, unsigned s, unsigned wb)
+static inline unsigned __alubox_fu__flags_s_wb(alubox_p alu, unsigned s, unsigned wb)
 {
 	if(alu) {
 		alu->flags.s = s;
 		alu->flags.wb = wb;
 	}
-
-	return(__alubox_fu__flags_nz(alu, result));
 }
+
+/*
+ * Credit to:
+ * 		http://www.emulators.com/docs/nx11_flags.htm
+ *
+ * OF(A+B) = ((A XOR D) AND NOT (A XOR B)) < 0
+ * OF(A-B) = ((A XOR D) AND (A XOR B)) < 0
+ *
+ * CF(A+B) = (((A XOR B) XOR D) < 0) XOR (((A XOR D) AND NOT (A XOR B)) < 0)
+ * CF(A-B) = (((A XOR B) XOR D) < 0) XOR (((A XOR D) AND (A XOR B)) < 0)
+ *
+ */
 
 static inline unsigned __alubox_fu__flags_add(alubox_p alu, unsigned s1, unsigned s2)
 {
 	const unsigned result = s1 + s2;
 
 	if(alu && alu->flags.s) {
-		const unsigned long long int usum = s1 + s2;
-		const long long int ssum = (int)s1 + (int)s2;
+		const unsigned xvec = (s1 ^ s2);
+		const unsigned ovec = (s1 ^ result) & ~xvec;
 
-		alu->psr.c = (usum != result);
-		alu->psr.v = (ssum != (signed)result);
+		alu->psr.c = BEXT((xvec ^ ovec ^ result), __unsigned_bits);
+		alu->psr.v = BEXT(ovec, __unsigned_bits);
 	}
 
 	return(__alubox_fu__flags_nz(alu, result));
@@ -107,7 +119,13 @@ extern inline unsigned __alubox_fu_s_and(alubox_p alu, unsigned s1, unsigned s2)
 
 extern inline unsigned __alubox_fu_s_asr(alubox_p alu, unsigned s1, unsigned s2)
 {
-	return(__alubox_fu__flags_nz(alu, __alubox_fu_asr(0, s1, s2, 0)));
+	unsigned carry_out = 0;
+	const unsigned result = _asr_vc(s1, s2, &carry_out);
+
+	if(alu && alu->flags.s)
+		alu->psr.c = (0 != carry_out);
+
+	return(__alubox_fu__flags_nz(alu, result));
 }
 
 extern inline unsigned __alubox_fu_s_bclr(alubox_p alu, unsigned s1, unsigned s2)
@@ -147,12 +165,24 @@ extern inline unsigned __alubox_fu_s_eor(alubox_p alu, unsigned s1, unsigned s2)
 
 extern inline unsigned __alubox_fu_s_lsl(alubox_p alu, unsigned s1, unsigned s2)
 {
-	return(__alubox_fu__flags_nz(alu, __alubox_fu_lsl(0, s1, s2, 0)));
+	unsigned carry_out = 0;
+	const unsigned result = _lsl_vc(s1, s2, &carry_out);
+
+	if(alu && alu->flags.s)
+		alu->psr.c = (0 != carry_out);
+
+	return(__alubox_fu__flags_nz(alu, result));
 }
 
 extern inline unsigned __alubox_fu_s_lsr(alubox_p alu, unsigned s1, unsigned s2)
 {
-	return(__alubox_fu__flags_nz(alu, __alubox_fu_lsr(0, s1, s2, 0)));
+	unsigned carry_out = 0;
+	const unsigned result = _lsr_vc(s1, s2, &carry_out);
+
+	if(alu && alu->flags.s)
+		alu->psr.c = (0 != carry_out);
+
+	return(__alubox_fu__flags_nz(alu, result));
 }
 
 extern inline unsigned __alubox_fu_s_mod(alubox_p alu, unsigned s1, unsigned s2)
@@ -197,7 +227,7 @@ extern inline unsigned __alubox_fu_s_rrx(alubox_p alu, unsigned s1, unsigned s2)
 
 	if(alu && alu->flags.s)
 		alu->psr.c = s1 & 1;
-		
+
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_rrx(0, s1, s2, carry_in)));
 }
 
@@ -227,24 +257,24 @@ extern inline unsigned __alubox_fu_s_sub(alubox_p alu, unsigned s1, unsigned s2)
 
 extern inline unsigned __alubox_fu_s_cmn(alubox_p alu, unsigned s1, unsigned s2)
 {
-	const unsigned result = __alubox_fu_add(0, s1, s2, 0);
-	return(__alubox_fu__flags_nz_s_wb(alu, result, 1, 0));
+	__alubox_fu__flags_s_wb(alu, 1, 0);
+	return(__alubox_fu_s_add(alu, s1, s2));
 }
 
 extern inline unsigned __alubox_fu_s_cmp(alubox_p alu, unsigned s1, unsigned s2)
 {
-	const unsigned result = __alubox_fu_sub(0, s1, s2, 0);
-	return(__alubox_fu__flags_nz_s_wb(alu, result, 1, 0));
+	__alubox_fu__flags_s_wb(alu, 1, 0);
+	return(__alubox_fu_s_sub(alu, s1, s2));
 }
 
 extern inline unsigned __alubox_fu_s_teq(alubox_p alu, unsigned s1, unsigned s2)
 {
-	const unsigned result = __alubox_fu_eor(0, s1, s2, 0);
-	return(__alubox_fu__flags_nz_s_wb(alu, result, 1, 0));
+	__alubox_fu__flags_s_wb(alu, 1, 0);
+	return(__alubox_fu_s_eor(alu, s1, s2));
 }
 
 extern inline unsigned __alubox_fu_s_tst(alubox_p alu, unsigned s1, unsigned s2)
 {
-	const unsigned result = __alubox_fu_and(0, s1, s2, 0);
-	return(__alubox_fu__flags_nz_s_wb(alu, result, 1, 0));
+	__alubox_fu__flags_s_wb(alu, 1, 0);
+	return(__alubox_fu_s_and(alu, s1, s2));
 }

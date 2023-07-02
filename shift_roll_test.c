@@ -65,6 +65,17 @@ static void _test_asr_vc(void) {
 	LOG_ASSERT(0x00000000, ==, out_c);
 	LOG_ASSERT(0xffffffff, ==, _asr_vc(0x80000000, 32, &out_c));
 	LOG_ASSERT(0x00000001, ==, out_c);
+
+	LOG_ASSERT(0x10101010, ==, _asr_vc(0x10101010, 0, &out_c));
+	LOG_ASSERT(0x00000000, ==, out_c);
+	LOG_ASSERT(0x08080808, ==, _asr_vc(0x10101010, 1, &out_c));
+	LOG_ASSERT(0x00000000, ==, out_c);
+	LOG_ASSERT(0x04040404, ==, _asr_vc(0x10101010, 2, &out_c));
+	LOG_ASSERT(0x00000000, ==, out_c);
+	LOG_ASSERT(0x18080808, ==, _asr_vc(0x30101010, 1, &out_c));
+	LOG_ASSERT(0x00000000, ==, out_c);
+	LOG_ASSERT(0xc8080808, ==, _asr_vc(0x90101010, 1, &out_c));
+	LOG_ASSERT(0x00000000, ==, out_c);
 }
 
 static void _test_lsl(void) {
@@ -107,6 +118,13 @@ static void	_test_lsl_vc(void) {
 	LOG_ASSERT(0x00000001, ==, out_c);
 	LOG_ASSERT(0x00000000, ==, _lsl_vc(0x80000001, 33, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
+
+	LOG_ASSERT(0x80808080, ==, _lsl_vc(0x80808080, 0, &out_c));
+	LOG_ASSERT(0x00000000, ==, out_c);
+	LOG_ASSERT(0x01010100, ==, _lsl_vc(0x80808080, 1, &out_c));
+	LOG_ASSERT(0x00000001, ==, out_c);
+	LOG_ASSERT(0x02020200, ==, _lsl_vc(0x80808080, 2, &out_c));
+	LOG_ASSERT(0x00000000, ==, out_c);
 }
 
 static void _test_lsr(void) {
@@ -137,7 +155,7 @@ static void _test_lsr(void) {
 static void	_test_lsr_vc(void) {
 	uint32_t out_c = 0;
 
-	LOG("lsl_c");
+	LOG("lsr_c");
 	LOG_ASSERT(0x80000001, ==, _lsr_vc(0x80000001, 0, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
 	LOG_ASSERT(0x40000000, ==, _lsr_vc(0x80000001, 1, &out_c));
@@ -147,6 +165,13 @@ static void	_test_lsr_vc(void) {
 	LOG_ASSERT(0x00000000, ==, _lsr_vc(0x80000001, 32, &out_c));
 	LOG_ASSERT(0x00000001, ==, out_c);
 	LOG_ASSERT(0x00000000, ==, _lsr_vc(0x80000001, 33, &out_c));
+	LOG_ASSERT(0x00000000, ==, out_c);
+
+	LOG_ASSERT(0x00808080, ==, _lsr_vc(0x01010101, 1, &out_c));
+	LOG_ASSERT(0x00000001, ==, out_c);
+	LOG_ASSERT(0x00404040, ==, _lsr_vc(0x01010101, 2, &out_c));
+	LOG_ASSERT(0x00000000, ==, out_c);
+	LOG_ASSERT(0x00202020, ==, _lsr_vc(0x01010101, 3, &out_c));
 	LOG_ASSERT(0x00000000, ==, out_c);
 }
 
