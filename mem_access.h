@@ -30,6 +30,8 @@ static unsigned mem_32_access(void* p2pat, unsigned* write) {
 }
 
 static unsigned mem_64_access(void* p2pat, unsigned* write) {
+	assert(sizeof(unsigned) >= sizeof(uint64_t));
+
 	const unsigned data = write ? *write : *(uint64_t*)p2pat;
 
 	if(write)
@@ -51,7 +53,7 @@ static unsigned mem_8_access(void* p2pat, unsigned* write) {
 
 static inline unsigned mem_access(void* p2pat, size_t size, unsigned* write) {
 	switch(size) {
-#ifdef __int128_t
+#ifdef __int128_t__
 		case 16:
 			return(mem_128_access(p2pat, write));
 #endif
