@@ -67,7 +67,7 @@ static unsigned mem_32le_access(void* p2pat, unsigned* write) {
 
 static inline unsigned mem_64le_access(void* p2pat, unsigned* write) {
 	if(sizeof(unsigned) <= sizeof(uint64_t))
-		return(mem_0x0be_access(p2pat, sizeof(uint64_t), write));
+		return(mem_0x0le_access(p2pat, sizeof(uint64_t), write));
 
 	const unsigned data = write ? *write : htole64(*(uint64_t*)p2pat);
 
