@@ -120,7 +120,9 @@ static inline unsigned _bitfield_pb_bflj(unsigned data, unsigned pos, unsigned b
 }
 
 #define _BF(_bits)								_LSL(~0U, _bits)
+#define _BFULL(_bits)							_LSL((unsigned long long int)~0ULL, _bits)
 #define _BM(_bits)								(~_BF(_bits))
+#define _BMULL(_bits)							(~_BFULL(_bits))
 
 /* msb-to-lsb bitfield operations */
 
