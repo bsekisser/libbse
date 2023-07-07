@@ -8,12 +8,12 @@
 
 #define LOG_TRACE_START(_f, ...) \
 	{ \
-		printf("%s:%s:%u: " _f, __FILE__, __func__, __LINE__, ##__VA_ARGS__); \
+		printf("%s:%s:%04u: " _f, __FILE__, __func__, __LINE__, ##__VA_ARGS__); \
 	}
 
 #define LOG_START(_f, ...) \
 	{ \
-		printf("%s:%u: " _f, __func__, __LINE__, ##__VA_ARGS__); \
+		printf("%s:%04u: " _f, __func__, __LINE__, ##__VA_ARGS__); \
 	}
 
 #define _LOG_(_f, ...) \
@@ -28,7 +28,7 @@
 
 #define LOG(_f, ...) \
 	{ \
-		printf("%s:%04u: " _f "\n", __func__, __LINE__, ##__VA_ARGS__); \
+		LOG_START(_f "\n", ##__VA_ARGS__); \
 	}
 
 #define LOG_ERR(_f, ...) \
