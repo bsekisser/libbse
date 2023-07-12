@@ -194,5 +194,5 @@ uint32_t _rrx_vc(uint32_t data, uint32_t carry_in, uint32_t* carry_out)
 	if(carry_out)
 		*carry_out = _rrx_c(data);
 
-	return(_rrx_v(data, carry_in))
+	return(_rrx_v(data, carry_in));
 }
