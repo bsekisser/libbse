@@ -178,7 +178,7 @@ uint32_t _ror_vc(uint32_t data, unsigned shift, uint32_t* carry_out)
 /* **** */
 
 __STATIC__ __INLINE__
-unsigned _rrx_c(uint32_t data)
+uint32_t _rrx_c(uint32_t data)
 {
 	return(data & 1);
 }
@@ -189,6 +189,7 @@ uint32_t _rrx_v(uint32_t data, uint32_t carry_in)
 	return(_lsl(!!carry_in, 31) | _lsr(data, 1));
 }
 
+__STATIC__ __INLINE__
 uint32_t _rrx_vc(uint32_t data, uint32_t carry_in, uint32_t* carry_out)
 {
 	if(carry_out)
