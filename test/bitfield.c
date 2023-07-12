@@ -16,7 +16,7 @@
 		if(0) assert(result); \
 	})
 
-#include "bitfield.h"
+#include "../bitfield.h"
 
 int main(void)
 {

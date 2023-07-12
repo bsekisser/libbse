@@ -1,11 +1,11 @@
-#include "log.h"
+#include "../log.h"
 
 #define __STATIC__ extern
 //#define __INLINE__ inline
 
 #include <stdio.h>
 
-#include "shift_roll.h"
+#include "../shift_roll.h"
 
 /* **** */
 
@@ -19,14 +19,14 @@
 	({ \
 		unsigned _result = _action; \
 		unsigned fail = !(_expect _test _result); \
+		const char* pass_fail[2] = { "PASS", "FAIL" }; \
 		\
-		LOG_START(#_expect " " #_test " (0x%08x <-- " #_action ") -- ", _result); \
+		LOG_START("[ %s ] -- ", pass_fail[fail]); \
+		LOG_END(#_expect " " #_test " (0x%08x <-- " #_action ")", _result); \
 		\
 		if(fail) { \
-			LOG_END("FAIL"); \
 			assert(_expect _test _result); \
 		} \
-		LOG_END("PASS"); \
 	})
 
 /* **** */

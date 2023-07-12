@@ -1,6 +1,6 @@
-#include "mem_access_be.h"
-#include "mem_access_le.h"
-#include "mem_access.h"
+#include "../mem_access_be.h"
+#include "../mem_access_le.h"
+#include "../mem_access.h"
 
 /* **** */
 
