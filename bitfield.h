@@ -131,6 +131,7 @@ static inline unsigned _bitfield_pb_bflj(unsigned data, unsigned pos, unsigned b
 #define mlBFEXT(_data, _msb, _lsb)				pbBFEXT(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
 #define mlBFEXTs(_data, _msb, _lsb)				pbBFEXTs(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
 #define mlBFINS(_data, _src, _msb, _lsb)		pbBFINS(_data, _src, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
+#define mlBFBIC_MAS(_data, _src, _msb, _lsb)	pbBFBIC_MAS(_data, _src, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
 #define mlBFMOV(_data, _msb, _lsb, _to)			pbBFMOV(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb), _to)
 #define mlBFMOVs(_data, _msb, _lsb, _to)		pbBFMOVs(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb), _to)
 #define mlBFTST(_data, _msb, _lsb)				pbBFTST(_data, _lsb, MSB_LSB_TO_BITS(_msb, _lsb))
@@ -159,6 +160,13 @@ static inline unsigned _bitfield_pb_bfins(unsigned data, unsigned ins, unsigned 
 	data = _bitfield_pb_bfclr(data, pos, bits);
 	ins = _bitfield_pb_bfext(ins, 0, bits);
 	data |= _LSL(ins, pos);
+	return(data);
+}
+
+#define pbBFBIC_MAS(_data, _ins, _pos, _bits)	_bitfield_pb_bfbic_mas(_data, _ins, _pos, _bits)
+static inline unsigned _bitfield_pb_bfbic_mas(unsigned data, unsigned ins, unsigned pos, unsigned bits) {
+	data &= _BFC(pos, bits);
+	data |= (ins & pbBF(pos, bits));
 	return(data);
 }
 
