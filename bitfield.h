@@ -37,14 +37,14 @@ static inline unsigned _bitfield_bclr(unsigned data, unsigned bit) {
 	#define _BCLR __BCLR
 #endif
 
-#define BCLR(_data, _bit)						(_data = _BCLR(_data, _bit))
+#define BCLR(_data, _bit)						(_data = (typeof(_data))_BCLR(_data, _bit))
 
 #define __BEXT(_data, _bit)					(_LSR(_data, _bit) & 1U)
 static inline unsigned _bitfield_bext(unsigned data, unsigned bit) {
 	return(__BEXT(data, bit));
 }
 #ifdef __bitfield_functions__
-	#define BEXT(_data, _bit)					_bitfield_bext(_data, _bit)
+	#define BEXT(_data, _bit)					(!!_bitfield_bext(_data, _bit))
 #else
 	#define BEXT __BEXT
 #endif
@@ -59,9 +59,9 @@ static inline unsigned _bitfield_bset(unsigned data, unsigned bit) {
 	#define _BSET __BSET
 #endif
 
-#define BSET(_data, _bit)						(_data = _BSET(_data, _bit))
+#define BSET(_data, _bit)						(_data = (typeof(_data))_BSET(_data, _bit))
 
-#define __BSET_AS(_data, _bit, _set)			(_data | _LSL(!!(_set), _bit))
+#define __BSET_AS(_data, _bit, _set)			(_data | (typeof(data))_LSL(!!((unsigned)(_set)), _bit))
 static inline unsigned _bitfield_bset_as(unsigned data, unsigned bit, unsigned set) {
 	return(__BSET_AS(data, bit, set));
 }
@@ -71,7 +71,7 @@ static inline unsigned _bitfield_bset_as(unsigned data, unsigned bit, unsigned s
 	#define _BSET_AS __BSET_AS
 #endif
 
-#define BSET_AS(_data, _bit, _set)				(_data = _BSET_AS(_data, _bit, _set))
+#define BSET_AS(_data, _bit, _set)				(_data = (typeof(_data))_BSET_AS(_data, _bit, _set))
 
 
 #define __BTST(_data, _bit)					((_data) & _BV(_bit))
@@ -149,10 +149,10 @@ static inline unsigned _bitfield_pb_bfext(unsigned data, unsigned pos, unsigned 
 }
 
 #define pbBFEXTs(_data, _pos, _bits)			((typeof(_data))_bitfield_pb_bfexts(_data, _pos, _bits))
-static inline unsigned _bitfield_pb_bfexts(unsigned data, unsigned pos, unsigned bits) {
+static inline signed _bitfield_pb_bfexts(unsigned data, unsigned pos, unsigned bits) {
 	data = _bitfield_pb_bflj(data, pos, bits);
-	data = (unsigned)_ASR_MASKED((int)data, -bits);
-	return(data);
+	data = (unsigned)_ASR_MASKED((signed)data, -bits);
+	return((signed)data);
 }
 
 #define pbBFINS(_data, _ins, _pos, _bits)		_bitfield_pb_bfins(_data, _ins, _pos, _bits)
@@ -178,10 +178,10 @@ static inline unsigned _bitfield_pb_bfmov(unsigned data, unsigned pos, unsigned 
 }
 
 #define pbBFMOVs(_data, _pos, _bits, _to)		_bitfield_pb_bfmovs((int)_data, _pos, _bits, _to)
-static inline unsigned _bitfield_pb_bfmovs(unsigned data, unsigned pos, unsigned bits, unsigned to) {
-	data = _bitfield_pb_bfexts(data, pos, bits);
+static inline signed _bitfield_pb_bfmovs(unsigned data, unsigned pos, unsigned bits, unsigned to) {
+	data = (unsigned)_bitfield_pb_bfexts(data, pos, bits);
 	data = _LSL(data, to);
-	return(data);
+	return((signed)data);
 }
 
 

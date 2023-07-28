@@ -48,7 +48,7 @@ static inline unsigned mem_0x0le_access(void* p2pat, size_t size, unsigned* writ
 /* **** */
 
 static inline unsigned mem_16le_access(void* p2pat, unsigned* write) {
-	const unsigned data = write ? *write : htole16(*(uint16_t*)p2pat);
+	const uint16_t data = (uint16_t)(write ? *write : htole16(*(uint16_t*)p2pat));
 
 	if(write)
 		*(uint16_t*)p2pat = le16toh(data);
@@ -69,12 +69,12 @@ static inline unsigned mem_64le_access(void* p2pat, unsigned* write) {
 	if(sizeof(unsigned) <= sizeof(uint64_t))
 		return(mem_0x0le_access(p2pat, sizeof(uint64_t), write));
 
-	const unsigned data = write ? *write : htole64(*(uint64_t*)p2pat);
+	const uint64_t data = (uint64_t)(write ? *write : htole64(*(uint64_t*)p2pat));
 
 	if(write)
 		*(uint64_t*)p2pat = le64toh(data);
 
-	return(data);
+	return((unsigned)data);
 }
 
 /* **** */

@@ -37,16 +37,16 @@ __STATIC__ __INLINE__ unsigned mem_128_access(void* p2pat, unsigned* write) {
 
 __STATIC__ __INLINE__ unsigned mem_16_access(uint16_t* p2pat, unsigned* write) {
 	if(write)
-		*p2pat = *write;
+		*p2pat = (uint16_t)*write;
 
 	return(write ? *write : *p2pat);
 }
 
-__STATIC__ __INLINE__ unsigned mem_16i_access(int16_t* p2pat, unsigned* write) {
+__STATIC__ __INLINE__ int16_t mem_16i_access(int16_t* p2pat, unsigned* write) {
 	if(write)
 		*p2pat = (int16_t)*write;
 
-	return(write ? *write : (unsigned)*p2pat);
+	return((int16_t)(write ? (int16_t)*write : *p2pat));
 }
 
 __STATIC__ __INLINE__ unsigned mem_32_access(uint32_t* p2pat, unsigned* write) {
@@ -69,7 +69,7 @@ __STATIC__ __INLINE__ unsigned long long mem_64_access(uint64_t* p2pat, unsigned
 
 __STATIC__ __INLINE__ unsigned mem_8_access(uint8_t* p2pat, unsigned* write) {
 	if(write)
-		*p2pat = *write;
+		*p2pat = (uint8_t)*write;
 
 	return(write ? *write : *p2pat);
 }
@@ -111,8 +111,8 @@ __STATIC__ __INLINE__ unsigned mem_access(void* p2pat, size_t size, unsigned* wr
 #define _LOG_02u_(_x) _LOG_(", " _02u_(_x))
 #define _LOG_x08x_(_x) _LOG_(", " _x08x_(_x))
 
-__STATIC__ __INLINE__ unsigned mem_32ix_access(int32_t* p2pat, unsigned offset, size_t size, unsigned* write) {
-	const int32_t data_read = mem_32i_access(p2pat, 0);
+__STATIC__ __INLINE__ int32_t mem_32ix_access(int32_t* p2pat, unsigned offset, size_t size, unsigned* write) {
+	const unsigned data_read = (unsigned)mem_32i_access(p2pat, 0);
 	const unsigned offset_bits = offset << 3;
 	const unsigned size_bits = size << 3;
 
@@ -133,10 +133,10 @@ __STATIC__ __INLINE__ unsigned mem_32ix_access(int32_t* p2pat, unsigned offset, 
 			LOG_END();
 		}
 
-		return(mem_32i_access(p2pat, &rmw_data_write));
+		return((int32_t)mem_32i_access(p2pat, &rmw_data_write));
 	}
 
-	return(pbBFEXT(data_read, offset_bits, size_bits));
+	return((int32_t)pbBFEXT(data_read, offset_bits, size_bits));
 }
 
 __STATIC__ __INLINE__ unsigned mem_32x_access(uint32_t* p2pat, unsigned offset, size_t size, unsigned* write) {

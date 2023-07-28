@@ -40,11 +40,11 @@ unsigned _asr_c(int32_t data, unsigned shift)
 	if(0 == shift)
 		return(0);
 
-	return(_asr(data, shift - 1) & 1);
+	return((unsigned)_asr(data, shift - 1) & 1);
 }
 
 __STATIC__ __INLINE__
-int32_t _asr_vc(int32_t data, unsigned shift, int32_t* carry_out)
+int32_t _asr_vc(int32_t data, unsigned shift, uint32_t* carry_out)
 {
 	if(carry_out)
 		*carry_out = _asr_c(data, shift);
@@ -93,7 +93,7 @@ unsigned _lsl_c(uint32_t data, unsigned shift)
 	if(0 == shift)
 		return(0);
 
-	return(!!(_lsl(data, shift - 1) & (1 << __SIZEOF_DATA_MASK__)));
+	return(!!(_lsl(data, shift - 1) & (1U << __SIZEOF_DATA_MASK__)));
 }
 
 __STATIC__ __INLINE__
@@ -145,7 +145,7 @@ uint32_t _rol_c(uint32_t data, unsigned shift)
 	if(0 == shift)
 		return(0);
 
-	return(!!(_rol(data, shift - 1) & (1 << __SIZEOF_DATA_MASK__)));
+	return(!!(_rol(data, shift - 1) & (1U << __SIZEOF_DATA_MASK__)));
 }
 
 __STATIC__ __INLINE__
