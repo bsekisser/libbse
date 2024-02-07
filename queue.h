@@ -6,12 +6,21 @@
 
 /* **** */
 
+enum {
+	QSORT_CONTINUE,
+	QSORT_INSERT,
+//
+	QSORT_DROP = -1,
+	QSORT_RESTART = -2,
+};
+
+typedef struct qelem_t** qelem_h;
 typedef struct qelem_t* qelem_p;
 typedef struct qelem_t {
 	qelem_p		next;
 	union {
 		void*		data;
-		void		(*fn)(void*);
+		void		(*fn)(void*, ...);
 	};
 }qelem_t;
 
@@ -21,42 +30,14 @@ typedef struct queue_t {
 	qelem_p		tail;
 }queue_t;
 
-static inline void enqueue(queue_p q, qelem_p e)
-{
-	if(q->tail)
-		q->tail->next = e;
+typedef int (*queue_sort_fn)(qelem_p lhs, qelem_p insert, qelem_p rhs);
 
-	q->tail = e;
+/* **** */
 
-	if(!q->head)
-		q->head = e;
-}
-
-static inline int queue_count(queue_p q)
-{
-	int count = 0;
-
-	for(qelem_p e = q->head; e; count++)
-		e = e->next;
-
-	return(count);
-}
-
-static inline void queue_exit(queue_p q)
-{
-	for(qelem_p e = q->head; e; e = e->next)
-		free(e);
-
-	free(q);
-}
-
-static inline queue_p queue_init(queue_p q)
-{
-	if(!q)
-		q = (queue_p)malloc(sizeof(queue_t));
-
-	q->head = 0;
-	q->tail = 0;
-
-	return(q);
-}
+void queue_enqueue(qelem_p e, queue_p q);
+size_t queue_count(queue_p q);
+void queue_exit(queue_p q);
+queue_p queue_init(queue_p q);
+void queue_insert(qelem_p lhs, qelem_p e, qelem_p rhs, queue_p q);
+void queue_insert_sorted(qelem_p e, queue_p q, queue_sort_fn fn);
+qelem_p queue_next(qelem_h lhs, qelem_h rhs, queue_p q);
