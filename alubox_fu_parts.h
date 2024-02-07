@@ -3,6 +3,7 @@
 /* **** */
 
 #include "bitfield.h"
+#include "shift_roll.h"
 #include "unused.h"
 
 /* **** */
@@ -29,8 +30,7 @@ unsigned __alubox_fu_adc(unsigned acc, unsigned s1, unsigned s2, unsigned carry_
 UNUSED_FN __ALUBOX_STATIC__ __ALUBOX_INLINE__
 unsigned __alubox_fu_add(unsigned acc, unsigned s1, unsigned s2, unsigned carry_in)
 {
-	return(__alubox_fu_adc(acc, s1, s2, 0));
-	UNUSED(carry_in);
+	return(__alubox_fu_adc(acc, s1, s2, 0 & carry_in));
 }
 
 UNUSED_FN __ALUBOX_STATIC__ __ALUBOX_INLINE__
@@ -187,6 +187,5 @@ unsigned __alubox_fu_sbc(unsigned acc, unsigned s1, unsigned s2, unsigned carry_
 UNUSED_FN __ALUBOX_STATIC__ __ALUBOX_INLINE__
 unsigned __alubox_fu_sub(unsigned acc, unsigned s1, unsigned s2, unsigned carry_in)
 {
-	return(__alubox_fu_sbc(acc, s1, s2, 0));
-	UNUSED(carry_in);
+	return(__alubox_fu_sbc(acc, s1, s2, 0 & carry_in));
 }
