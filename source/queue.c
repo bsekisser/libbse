@@ -7,7 +7,7 @@
 
 /* **** */
 
-void enqueue(qelem_p e, queue_p q)
+void queue_enqueue(qelem_p e, queue_p q)
 {
 	assert(e);
 	assert(q);
