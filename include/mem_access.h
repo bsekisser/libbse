@@ -27,7 +27,7 @@
 #endif
 
 #ifdef __int128_t__
-__STATIC__ __INLINE__ unsigned mem_128_access(void* p2pat, unsigned* write) {
+__STATIC__ __INLINE__ unsigned mem_128_access(void* p2pat, unsigned const* write) {
 	if(write)
 		*(uint128_t*)p2pat = *write;
 
@@ -35,39 +35,39 @@ __STATIC__ __INLINE__ unsigned mem_128_access(void* p2pat, unsigned* write) {
 }
 #endif
 
-__STATIC__ __INLINE__ unsigned mem_16_access(uint16_t* p2pat, unsigned* write) {
+__STATIC__ __INLINE__ unsigned mem_16_access(uint16_t* p2pat, unsigned const* write) {
 	if(write)
 		*p2pat = (uint16_t)*write;
 
 	return(write ? *write : *p2pat);
 }
 
-__STATIC__ __INLINE__ int16_t mem_16i_access(int16_t* p2pat, unsigned* write) {
+__STATIC__ __INLINE__ int16_t mem_16i_access(int16_t* p2pat, unsigned const* write) {
 	if(write)
 		*p2pat = (int16_t)*write;
 
 	return((int16_t)(write ? (int16_t)*write : *p2pat));
 }
 
-__STATIC__ __INLINE__ unsigned mem_32_access(uint32_t* p2pat, unsigned* write) {
+__STATIC__ __INLINE__ unsigned mem_32_access(uint32_t* p2pat, unsigned const* write) {
 	if(write)
 		*p2pat = *write;
 
 	return(write ? *write : *p2pat);
 }
 
-__STATIC__ __INLINE__ unsigned mem_32i_access(int32_t* p2pat, unsigned* write) {
+__STATIC__ __INLINE__ unsigned mem_32i_access(int32_t* p2pat, unsigned const* write) {
 	return(mem_32_access((uint32_t*)p2pat, write));
 }
 
-__STATIC__ __INLINE__ unsigned long long mem_64_access(uint64_t* p2pat, unsigned long long* write) {
+__STATIC__ __INLINE__ unsigned long long mem_64_access(uint64_t* p2pat, unsigned long long const* write) {
 	if(write)
 		*p2pat = *write;
 
 	return(write ? *write : *p2pat);
 }
 
-__STATIC__ __INLINE__ unsigned mem_8_access(uint8_t* p2pat, unsigned* write) {
+__STATIC__ __INLINE__ unsigned mem_8_access(uint8_t* p2pat, unsigned const* write) {
 	if(write)
 		*p2pat = (uint8_t)*write;
 
@@ -76,7 +76,7 @@ __STATIC__ __INLINE__ unsigned mem_8_access(uint8_t* p2pat, unsigned* write) {
 
 /* **** */
 
-__STATIC__ __INLINE__ unsigned mem_access(void* p2pat, size_t size, unsigned* write) {
+__STATIC__ __INLINE__ unsigned mem_access(void* p2pat, size_t size, unsigned const* write) {
 	switch(size) {
 #ifdef __int128_t__
 		case 16:

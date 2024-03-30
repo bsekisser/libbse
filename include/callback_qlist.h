@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef _cplusspluss
+extern "C" {
+#endif
+
 /* **** */
 
 #include "err_test.h"
@@ -24,6 +28,7 @@ typedef struct callback_qlist_elem_t {
 	callback_qlist_elem_p next;
 	callback_qlist_elem_p prev;
 
+	unsigned flags;
 	callback_fn fn;
 	void* param;
 }callback_qlist_elem_t;
@@ -40,15 +45,17 @@ typedef struct callback_qlist_t {
 
 /* **** */
 
-void callback_qlist_alloc_init(callback_qlist_h cbl, unsigned int type);
-void callback_qlist_init(callback_qlist_p cbl, unsigned int type);
-void callback_qlist_process(callback_qlist_p cbl);
-void callback_qlist_register_callback(callback_qlist_p cbl,
-	callback_qlist_elem_p cble);
+void callback_qlist_alloc_init(callback_qlist_h const cbl, unsigned int type);
+void callback_qlist_init(callback_qlist_p const cbl, unsigned int type);
+void callback_qlist_process(callback_qlist_p const cbl);
+void callback_qlist_process_singleton_list(callback_qlist_p const cbl);
+void callback_qlist_register_callback(callback_qlist_p const cbl,
+	callback_qlist_elem_p const cble);
 
 /* **** */
 
-static inline void callback_qlist_setup_elem(callback_qlist_elem_p cble, callback_fn fn, void* param)
+static inline void callback_qlist_setup_elem(callback_qlist_elem_p const cble,
+	callback_fn const fn, void *const param)
 {
 	ERR_NULL(cble);
 //	ERR_IF(cble->next);
@@ -61,7 +68,7 @@ static inline void callback_qlist_setup_elem(callback_qlist_elem_p cble, callbac
 }
 
 static inline void callback_qlist_setup_and_register_callback(callback_qlist_p cbl,
-	callback_qlist_elem_p cble, callback_fn fn, void* param)
+	callback_qlist_elem_p const cble, callback_fn const fn, void *const param)
 {
 	ERR_NULL(cbl);
 	ERR_NULL(cble);
@@ -69,3 +76,7 @@ static inline void callback_qlist_setup_and_register_callback(callback_qlist_p c
 	callback_qlist_setup_elem(cble, fn, param);
 	callback_qlist_register_callback(cbl, cble);
 }
+
+#ifdef _cplusspluss
+}
+#endif

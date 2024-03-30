@@ -61,7 +61,7 @@ static inline unsigned _bitfield_bset(unsigned data, unsigned bit) {
 
 #define BSET(_data, _bit)						(_data = (typeof(_data))_BSET(_data, _bit))
 
-#define __BSET_AS(_data, _bit, _set)			(_data | (typeof(data))_LSL(!!((unsigned)(_set)), _bit))
+#define __BSET_AS(_data, _bit, _set)			(_data | (typeof(_data))_LSL(!!((unsigned)(_set)), _bit))
 static inline unsigned _bitfield_bset_as(unsigned data, unsigned bit, unsigned set) {
 	return(__BSET_AS(data, bit, set));
 }
@@ -163,13 +163,6 @@ static inline unsigned _bitfield_pb_bfins(unsigned data, unsigned ins, unsigned 
 	return(data);
 }
 
-#define pbBFBIC_MAS(_data, _ins, _pos, _bits)	_bitfield_pb_bfbic_mas(_data, _ins, _pos, _bits)
-static inline unsigned _bitfield_pb_bfbic_mas(unsigned data, unsigned ins, unsigned pos, unsigned bits) {
-	data &= _BFC(pos, bits);
-	data |= (ins & pbBF(pos, bits));
-	return(data);
-}
-
 #define pbBFMOV(_data, _pos, _bits, _to)		_bitfield_pb_bfmov(_data, _pos, _bits, _to)
 static inline unsigned _bitfield_pb_bfmov(unsigned data, unsigned pos, unsigned bits, unsigned to) {
 	data = _bitfield_pb_bfext(data, pos, bits);
@@ -192,6 +185,15 @@ static inline unsigned _bitfield_pb_bftst(unsigned data, unsigned pos, unsigned 
 
 /* **** */
 
+#define pbBFBIC_MAS(_data, _ins, _pos, _bits)	_bitfield_pb_bfbic_mas(_data, _ins, _pos, _bits)
+static inline unsigned _bitfield_pb_bfbic_mas(unsigned data, unsigned ins, unsigned pos, unsigned bits) {
+	data = _bitfield_pb_bfclr(data, pos, bits);
+	ins = _bitfield_pb_bftst(ins, pos, bits);
+	return(data | ins);
+}
+
+/* **** */
+
 #define _BMAS(_data, _bit, _set) _bitfield_bmas(_data, _bit, _set)
 static inline unsigned _bitfield_bmas(unsigned data, unsigned bit, unsigned set) {
 	data = _bitfield_bclr(data, bit);
@@ -201,8 +203,40 @@ static inline unsigned _bitfield_bmas(unsigned data, unsigned bit, unsigned set)
 #define BMAS(_data, _bit, _set)					(_data = (typeof(_data))_BMAS(_data, _bit, _set))
 
 #define BXCG(_data, _bit, _set) _bitfield_bxcg(_data, _bit, _set)
-static inline unsigned _bitfield_bxcg(unsigned* p2data, unsigned bit, unsigned set) {
+static inline unsigned _bitfield_bxcg(unsigned *const p2data, unsigned bit, unsigned set) {
 	unsigned was_set = _bitfield_bext(*p2data, bit);
 	*p2data = _bitfield_bmas(*p2data, bit, !!set);
 	return(was_set);
+}
+
+#define BFXsASR(_p2data, _bits) _bitfield_xs_asr(_p2data, _bits)
+static inline signed _bitfield_xs_asr(signed *const p2data, unsigned bits) {
+	const signed data = _bitfield_pb_bfexts(*p2data, 0, bits);
+	*p2data = _ASR(*p2data, bits);
+
+	return(data);
+}
+
+#define BFXsLSR(_p2data, _bits) _bitfield_xs_lsr(_p2data, _bits)
+static inline signed _bitfield_xs_lsr(signed *const p2data, unsigned bits) {
+	const signed data = _bitfield_pb_bfexts(*p2data, 0, bits);
+	*p2data = _LSR(*p2data, bits);
+
+	return(data);
+}
+
+#define BFXuASR(_p2data, _bits) _bitfield_xu_asr(_p2data, _bits)
+static inline unsigned _bitfield_xu_asr(unsigned *const p2data, unsigned bits) {
+	const unsigned data = _bitfield_pb_bfext(*p2data, 0, bits);
+	*p2data = _ASR(*p2data, bits);
+
+	return(data);
+}
+
+#define BFXuLSR(_p2data, _bits) _bitfield_xu_lsr(_p2data, _bits)
+static inline unsigned _bitfield_xu_lsr(unsigned *const p2data, unsigned bits) {
+	const unsigned data = _bitfield_pb_bfext(*p2data, 0, bits);
+	*p2data = _LSR(*p2data, bits);
+
+	return(data);
 }

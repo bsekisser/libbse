@@ -1,6 +1,7 @@
 #pragma once
 
-extern int _on_err_;
+//extern int _on_err_;
+static int _on_err_ = 0;
 
 #define _ON_ERR(_fail, _test) \
 	{ \

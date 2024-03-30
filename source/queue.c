@@ -7,7 +7,7 @@
 
 /* **** */
 
-void queue_enqueue(qelem_p e, queue_p q)
+void queue_enqueue(qelem_p const e, queue_p const q)
 {
 	assert(e);
 	assert(q);
@@ -21,7 +21,7 @@ void queue_enqueue(qelem_p e, queue_p q)
 		q->head = e;
 }
 
-size_t queue_count(queue_p q)
+size_t queue_count(queue_p const q)
 {
 	assert(q);
 
@@ -33,10 +33,10 @@ size_t queue_count(queue_p q)
 	return(count);
 }
 
-void queue_exit(queue_p q)
+void queue_exit(queue_p const q)
 {
 	assert(q);
-	
+
 	for(qelem_p e = q->head; e; e = e->next)
 		free(e);
 
@@ -56,7 +56,7 @@ queue_p queue_init(queue_p q)
 	return(q);
 }
 
-void queue_insert(qelem_p lhs, qelem_p e, qelem_p rhs, queue_p q)
+void queue_insert(qelem_p const lhs, qelem_p const e, qelem_p const rhs, queue_p const q)
 {
 	assert(e);
 	assert(q);
@@ -73,7 +73,7 @@ void queue_insert(qelem_p lhs, qelem_p e, qelem_p rhs, queue_p q)
 		q->tail = e;
 }
 
-void queue_insert_sorted(qelem_p e, queue_p q, queue_sort_fn fn)
+void queue_insert_sorted(qelem_p const e, queue_p const q, queue_sort_fn const fn)
 {
 	assert(e && q && fn);
 	int restarts = 4;
@@ -98,7 +98,7 @@ do_queue_insert:
 	queue_insert(lhs, e, rhs, q);
 }
 
-qelem_p queue_next(qelem_h h2lhs, qelem_h h2rhs, queue_p q)
+qelem_p queue_next(qelem_h const h2lhs, qelem_h const h2rhs, queue_p const q)
 {
 	assert(q);
 

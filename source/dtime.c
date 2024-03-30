@@ -16,31 +16,31 @@
 
 static uint64_t calibrate_get_dtime_loop(void)
 {
-   	uint64_t start = get_dtime();
-   	uint64_t elapsedTime = _get_dtime_elapsed(start);
+	int i = 0;
 
-	int i;
-	for(i=1; i<=1024; i++) {
-		start = get_dtime();
+	volatile uint64_t elapsedTime = 0;
+
+	do {
+		const volatile uint64_t start = get_dtime();
 		elapsedTime += _get_dtime_elapsed(start);
-	}
-		
+	}while(++i < 1024);
+
 	return(elapsedTime / i);
-	
+
 }
 
 static uint64_t calibrate_get_dtime_sleep(void)
 {
-   	uint64_t start = get_dtime();
-	
+	const uint64_t start = get_dtime();
+
 	sleep(1);
-		
+
 	return(_get_dtime_elapsed(start));
 }
 
 uint64_t dtime_calibrate(void)
 {
-	uint64_t cycleTime = calibrate_get_dtime_loop();
+	const uint64_t cycleTime = calibrate_get_dtime_loop();
 	uint64_t elapsedTime, ecdt;
 	double emhz;
 

@@ -28,7 +28,7 @@ typedef struct callback_list_t {
 void callback_list_alloc_init(callback_list_h cbl, unsigned int additional, unsigned int type);
 void callback_list_init(callback_list_p cbl, unsigned int additional, unsigned int type);
 void callback_list_process(callback_list_p cbl);
-void callback_list_register_callback(callback_list_p cbl, callback_fn fn, void* param);
+void callback_list_register_callback(callback_list_p cbl, callback_fn fn, void *const param);
 
 #define DEFN_CALLBACK_REGISTER_FN(_name, _type, _what, _llist) \
 	void _name ## _callback_ ## _llist(_type _what, callback_fn fn, void* param)
