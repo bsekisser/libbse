@@ -3,6 +3,8 @@
 #define __GNU_SOURCE
 
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 /* **** */
@@ -44,7 +46,10 @@
 #else
 	__STATIC__ __INLINE__ uint64_t get_dtime(void) {
 		struct timespec ts;
-		clock_gettime(CLOCK_MONOTONIC, &ts);
+		if(0 > clock_gettime(CLOCK_MONOTONIC, &ts)) {
+			perror("clock_gettime");
+			exit(-1);
+		}
 
 //		return((ts.tv_sec * 1E9) + ts.tv_nsec);
 //		return((ts.tv_sec * ((uint)1E9)) + ts.tv_nsec);
