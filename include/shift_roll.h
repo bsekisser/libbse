@@ -134,7 +134,8 @@ uint32_t _rol(uint32_t data, unsigned shift)
 __STATIC__ __INLINE__
 uint32_t _ror(uint32_t data, unsigned shift)
 {
-	return(_lsl_masked(data, -shift) | _lsr_masked(data, shift));
+//	return(_lsl_masked(data, -shift) | _lsr_masked(data, shift));
+	return(_lsl_masked(data, -shift) | _lsr(data, shift));
 }
 
 /* **** */
