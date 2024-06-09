@@ -6,6 +6,8 @@
 
 /* pos-bits bitfield helper operations */
 
+#define pbBFR(_pos, _bits)						(_LSL_MASKED(_BM(_bits), ~_pos))
+
 #define _BFLJ(_data, _pos, _bits)				__bitfield_pb_bflj(_data, _pos, _bits)
 static inline unsigned __bitfield_pb_bflj(unsigned data, unsigned pos, unsigned bits) {
 	return(_LSL_MASKED(data, -((pos) + (bits))));

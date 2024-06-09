@@ -32,7 +32,7 @@ static inline unsigned _bitop_bclrr(unsigned data, unsigned bit) {
 	return(__BCLRR(data, bit));
 }
 
-#ifdef __bitfield_functions__
+#ifdef __bitop_functions__
 	#define _BCLR(_data, _bit) 					_bitop_bclr(_data, _bit)
 	#define _BCLRR(_data, _bit)					_bitop_bclrr(_data, _bit)
 #else
@@ -54,13 +54,35 @@ static inline unsigned _bitop_bextr(unsigned data, unsigned bit) {
 	return(__BEXTR(data, bit));
 }
 
-#ifdef __bitfield_functions__
+#ifdef __bitop_functions__
 	#define BEXT(_data, _bit)					(!!_bitfield_bext(_data, _bit))
 	#define BEXTR(_data, _bit)					(!!_bitfield_bextr(_data, _bit))
 #else
 	#define BEXT __BEXT
 	#define BEXTR __BEXTR
 #endif
+
+#define __BSET(_data, _bit)					(_data | _BV(_bit))
+#define __BSETR(_data, _bit)					(_data | _BVR(_bit))
+
+static inline unsigned _bitop_bset(unsigned data, unsigned bit) {
+	return(__BSET(data, bit));
+}
+
+static inline unsigned _bitop_bsetr(unsigned data, unsigned bit) {
+	return(__BSETR(data, bit));
+}
+
+#ifdef __bitop_functions__
+	#define _BSET(_data, _bit)					_bitop_bset(_data, _bit)
+	#define _BSETR(_data, _bit)					_bitop_bsetr(_data, _bit)
+#else
+	#define _BSET __BSET
+	#define _BSETR __BSETR
+#endif
+
+#define BSET(_data, _bit)						(_data = (typeof(_data))_BSET(_data, _bit))
+#define BSETR(_data, _bit)						(_data = (typeof(_data))_BSETR(_data, _bit))
 
 #define __BSET_AS(_data, _bit, _set)			(_data | (typeof(_data))_LSL(!!((unsigned)(_set)), _bit))
 #define __BSETR_AS(_data, _bit, _set)			(_data | (typeof(_data))_LSL_MASKED(!!((unsigned)(_set)), ~_bit))
@@ -73,7 +95,7 @@ static inline unsigned _bitop_bsetr_as(unsigned data, unsigned bit, unsigned set
 	return(__BSETR_AS(data, bit, set));
 }
 
-#ifdef __bitfield_functions__
+#ifdef __bitop_functions__
 	#define _BSET_AS(_data, _bit, _set)			_bitop_bset_as(_data, _bit, _set)
 	#define _BSETR_AS(_data, _bit, _set)		_bitop_bsetr_as(_data, _bit, _set)
 #else
