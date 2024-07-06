@@ -19,7 +19,7 @@
 #define _LSR(_data, _bits)						((_data) >> (_bits))
 #define _LSR_MASKED(_data, _bits)				_LSR(_data, (_bits) & (typeof(_bits))__SIZEOF_DATA_BITS_MASK(_data))
 
-/* **** */
+/* singular bit operations */
 
 #define __BCLR(_data, _bit) 					(_data & ~_BV(_bit))
 #define __BCLRR(_data, _bit) 					(_data & ~_BVR(~_bit))
@@ -106,6 +106,28 @@ static inline unsigned _bitop_bsetr_as(unsigned data, unsigned bit, unsigned set
 #define BSET_AS(_data, _bit, _set)				(_data = (typeof(_data))_BSET_AS(_data, _bit, _set))
 #define BSETR_AS(_data, _bit, _set)				(_data = (typeof(_data))_BSETR_AS(_data, _bit, _set))
 
+#define __BTST(_data, _bit)					((_data) & _BV(_bit))
+static inline unsigned _bitfield_btst(unsigned data, unsigned bit) {
+	return(__BTST(data, bit));
+}
+#ifdef __bitfield_functions__
+	#define BTST(_data, _bit)					_bitfield_btst(_data, _bit)
+#else
+	#define BTST __BTST
+#endif
+
+#define __BXOR(_data, _bit) 					((_data) ^ _BV(_bit))
+static inline unsigned _bitfield_bxor(unsigned data, unsigned bit) {
+	return(__BXOR(data, bit));
+}
+#ifdef __bitfield_functions__
+	#define _BXOR(_data, _bit) 					_bitfield_bxor(_data, _bit)
+#else
+	#define _BXOR __BXOR
+#endif
+
+#define BXOR(_data, _bit)						(_data = _BXOR(_data, _bit))
+
 /* **** */
 
 #define _BMAS(_data, _bit, _set) _bitop_bmas(_data, _bit, _set)
@@ -123,3 +145,21 @@ static inline unsigned _bitop_bmasr(unsigned data, unsigned bit, unsigned set) {
 	return(data);
 }
 #define BMASR(_data, _bit, _set)				(_data = (typeof(_data))_BMASR(_data, _bit, _set))
+
+static inline unsigned _bitop_bmov(unsigned data, unsigned from, unsigned to) {
+	data = _bitop_bext(data, from);
+
+	return(_LSL(data, to));
+}
+#ifdef __bitfield_functions__
+	#define BMOV(_data, _from, _to)					_bitop_bmov(_data, _from, _to)
+#else
+	#define BMOV(_data, _from, _to)					_LSL(BEXT(_data, _from), _to)
+#endif
+
+#define BXCG(_data, _bit, _set) _bitop_bxcg(_data, _bit, _set)
+static inline unsigned _bitop_bxcg(unsigned *const p2data, unsigned bit, unsigned set) {
+	unsigned was_set = _bitop_bext(*p2data, bit);
+	*p2data = _bitop_bmas(*p2data, bit, !!set);
+	return(was_set);
+}

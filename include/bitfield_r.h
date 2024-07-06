@@ -5,7 +5,7 @@
 #include "bitops.h"
 #include "bitfield_pb.h"
 
-/* msb-to-lsb bitfield operations */
+/* lsb-to-msb bitfield operations */
 
 #define lmBITSR(_lsb, _msb) \
 	(1 + (_msb - _lsb))
