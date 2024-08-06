@@ -8,13 +8,13 @@
 
 /* **** */
 
-void dump_hex(const uint8_t* p, const uint32_t ppa, const unsigned count, const unsigned span, const unsigned ascii)
+void dump_hex(uint8_t *const p, const uint32_t ppa, const unsigned count, const unsigned span, const unsigned ascii)
 {
 	for(unsigned index = 0; index < count; index += span)
 		dump_hex_line(&p[index], ppa, index, span, ascii);
 }
 
-void dump_hex_line(const uint8_t* p, const uint32_t base, const uint32_t pos, const unsigned count, const unsigned ascii)
+void dump_hex_line(uint8_t *const p, const uint32_t base, const uint32_t pos, const unsigned count, const unsigned ascii)
 {
 	if(base)
 		printf("0x%08x:0x%03x:", base, pos);
