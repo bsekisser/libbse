@@ -7,6 +7,21 @@
 
 /* **** */
 
+qelem_p queue_dequeue_next(queue_p const q)
+{
+	assert(q);
+
+	const qelem_p e = q->head;
+	const qelem_p next = e ? e->next : 0;
+
+	q->head = next;
+
+	if(e == q->tail)
+		q->tail = next;
+
+	return(e);
+}
+
 void queue_enqueue(qelem_p const e, queue_p const q)
 {
 	assert(e);

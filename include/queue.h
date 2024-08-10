@@ -34,6 +34,7 @@ typedef int (*queue_sort_fn)(qelem_p lhs, qelem_p insert, qelem_p rhs);
 
 /* **** */
 
+qelem_p queue_dequeue_next(queue_p q);
 void queue_enqueue(qelem_p e, queue_p q);
 size_t queue_count(queue_p q);
 void queue_exit(queue_p q);
