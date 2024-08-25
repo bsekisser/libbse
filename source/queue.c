@@ -31,6 +31,7 @@ void queue_enqueue(qelem_p const e, queue_p const q)
 		q->tail->next = e;
 
 	q->tail = e;
+	e->next = 0;
 
 	if(!q->head)
 		q->head = e;
