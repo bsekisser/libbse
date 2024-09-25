@@ -7,6 +7,49 @@
 
 /* **** */
 
+size_t queue_count(queue_p const q)
+{
+	assert(q);
+
+	size_t count = 0;
+
+	for(qelem_p e = q->head; e; count++)
+		e = e->next;
+
+	return(count);
+}
+
+
+int queue_dequeue(qelem_p const e, qelem_p const p2lhs, queue_p const q)
+{
+	LOG();
+
+	if(p2lhs)
+		p2lhs->next = e->next;
+	else {
+		if(e == q->head) {
+			q->head = e->next;
+		} else {
+			qelem_p lhs = 0, rhs = 0, t = 0;
+
+			do {
+				t = queue_next(&lhs, &rhs, q);
+				if(e == t) {
+					LOG();
+					return(queue_dequeue(e, lhs, q));
+				}
+			}while(t);
+
+			return(0);
+		}
+	}
+
+	if(e == q->tail)
+		q->tail = e->next;
+
+	return(1);
+}
+
 qelem_p queue_dequeue_next(queue_p const q)
 {
 	assert(q);
@@ -35,18 +78,6 @@ void queue_enqueue(qelem_p const e, queue_p const q)
 
 	if(!q->head)
 		q->head = e;
-}
-
-size_t queue_count(queue_p const q)
-{
-	assert(q);
-
-	size_t count = 0;
-
-	for(qelem_p e = q->head; e; count++)
-		e = e->next;
-
-	return(count);
 }
 
 void queue_exit(queue_p const q)
