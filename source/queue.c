@@ -2,6 +2,10 @@
 
 /* **** */
 
+#include "log.h"
+
+/* **** */
+
 #include <assert.h>
 #include <stdlib.h>
 
