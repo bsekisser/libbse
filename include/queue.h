@@ -76,3 +76,7 @@ void queue_iterator_search_init(queue_iterator_search_ref qis, queue_ref q, queu
 int queue_iterator_search_next(queue_iterator_search_ref qis, void *const param);
 int queue_iterator_search_step(queue_iterator_search_ref qis, void *const param);
 qelem_p queue_next(qelem_href lhs, qelem_href rhs, queue_ref q);
+qelem_p queue_pop_back(queue_ref q, qelem_ref p2lhs);
+qelem_p queue_pop_front(queue_ref q);
+void queue_push_back(qelem_ref e, queue_ref q);
+void queue_push_front(qelem_ref e, queue_ref q);

@@ -28,41 +28,32 @@ size_t queue_count(queue_ref q)
 
 int queue_dequeue(qelem_ref e, qelem_ref p2lhs, queue_ref q)
 {
-	const qelem_ref next = e ? e->next : 0;
-	e->next = 0;
-
-	if(!next) assert(e == q->tail);
-
-	if(0) {
-		LOG_START("lhs: 0x%016" PRIxPTR, (uintptr_t)p2lhs);
-		_LOG_(", e: 0x%016" PRIxPTR, (uintptr_t)e);
-		_LOG_("->next: 0x%016" PRIxPTR, (uintptr_t)next);
-		LOG_END(", q: 0x%016" PRIxPTR, (uintptr_t)q);
-	}
-
 	assert(e);
+	assert(q);
 
-	if(p2lhs)
-		p2lhs->next = next;
+	if(e == q->head)
+		(void)queue_pop_front(q);
+	else if(e == q->tail)
+		(void)queue_pop_back(q, p2lhs);
 	else {
-		if(e == q->head) {
-			q->head = next;
-		} else {
-			qelem_p lhs = 0, rhs = 0, t = 0;
+		qelem_p lhs = p2lhs;
 
-			do {
-				t = queue_next(&lhs, &rhs, q);
-				if(e == t) {
-					return(queue_dequeue(e, lhs, q));
-				}
-			}while(t);
+		if(!lhs) {
+			queue_iterator_t qi;
+			queue_iterator_init(&qi, q);
 
-			return(0);
+			while(queue_iterator_next(&qi)) {
+				if(e == qi.cqe)
+					break;
+			}
+
+			lhs = qi.lhs;
 		}
-	}
 
-	if(e == q->tail)
-		q->tail = next;
+		assert(lhs);
+
+		lhs->next = e->next;
+	}
 
 	return(1);
 }
@@ -192,6 +183,8 @@ int queue_iterator_search(queue_iterator_search_ref qis, void *const param)
 
 void queue_iterator_search_init(queue_iterator_search_ref qis, queue_ref q, queue_iterator_search_fn fn)
 {
+	assert(qis);
+
 	(void)memset(qis, 0, sizeof(queue_iterator_search_t));
 	queue_iterator_init(&qis->qi, q);
 	qis->fn = fn;
@@ -238,4 +231,68 @@ qelem_p queue_next(qelem_href h2lhs, qelem_href h2rhs, queue_ref q)
 		*h2rhs = next;
 
 	return(next);
+}
+
+qelem_p queue_pop_back(queue_ref q, qelem_ref p2lhs)
+{
+	assert(q);
+
+	qelem_p lhs = p2lhs;
+	qelem_ref tail = q->tail;
+
+	if(!lhs) {
+		queue_iterator_t qi;
+
+		queue_iterator_init(&qi, q);
+		while(queue_iterator_next(&qi)) {
+			if(tail == qi.cqe)
+				break;
+		}
+
+		lhs = qi.lhs;
+	}
+
+	q->tail = lhs;
+
+	if(lhs)
+		lhs->next = tail->next;
+
+	return(tail);
+}
+
+qelem_p queue_pop_front(queue_ref q)
+{
+	assert(q);
+
+	qelem_ref e = q->head;
+	qelem_ref next = e ? e->next : 0;
+
+	q->head = next;
+
+	return(e);
+}
+
+void queue_push_back(qelem_ref e, queue_ref q)
+{
+	assert(q);
+
+	qelem_ref tail = q->tail;
+
+	if(tail)
+		tail->next = e;
+
+	q->tail = e;
+}
+
+void queue_push_front(qelem_ref e, queue_ref q)
+{
+	assert(e);
+	assert(q);
+
+	e->next = q->head;
+
+	q->head = e;
+
+	if(!q->tail)
+		q->tail = e;
 }
