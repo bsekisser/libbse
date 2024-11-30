@@ -92,8 +92,15 @@ void queue_exit(queue_ref q)
 {
 	assert(q);
 
-	for(qelem_p e = q->head; e; e = e->next)
+	qelem_p e = q->head;
+
+	do {
+		qelem_ref next = e->next;
+
 		free(e);
+
+		e = next;
+	}while(e);
 
 	free(q);
 }
