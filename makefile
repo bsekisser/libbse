@@ -1,4 +1,7 @@
 CFLAGS += -O2
+CFLAGS += -fPIC
+
+LDFLAGS += -shared
 
 SRC_DIR = source
 SRCS = $(wildcard $(SRC_DIR)/*.c)
