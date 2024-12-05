@@ -15,9 +15,20 @@ $(TARGET_EXE): $(OBJ_TARGET_EXE) | $(OBJ_DIR)
 $(TARGET_LIB): $(OBJ_TARGET_LIB) | $(OBJ_DIR)
 	@[ -L $@ ] || ln -sr $^
 
+$(TARGET_LIB_A): $(OBJ_TARGET_LIB_A) | $(OBJ_DIR)
+	@[ -L $@ ] || ln -sr $^
+
+$(TARGET_LIB_SO): $(OBJ_TARGET_LIB_SO) | $(OBJ_DIR)
+	@[ -L $@ ] || ln -sr $^
+
+
 $(OBJ_TARGET_EXE): $(OBJS) $(OBJS_CPP) | $(OBJ_DIR)
 
 $(OBJ_TARGET_LIB): $(OBJ_TARGET_LIB)($(OBJS) $(OBJS_CPP)) | $(OBJ_DIR)
+
+$(OBJ_TARGET_LIB_A): $(OBJ_TARGET_LIB_A)($(OBJS) $(OBJS_CPP)) | $(OBJ_DIR)
+
+$(OBJ_TARGET_LIB_SO): $(OBJ_TARGET_LIB_SO)($(OBJS) $(OBJS_CPP)) | $(OBJ_DIR)
 
 .PHONY: $(OBJ_DIR)
 $(OBJ_DIR):
@@ -30,7 +41,7 @@ clean:
 
 .PHONY: clean_all
 clean_all: clean clean_logs
-	-rm *.a $(OBJ_DIR)
+	-rm *.a *.so $(OBJ_DIR)
 
 .PHONY: clean_logs
 clean_logs:
