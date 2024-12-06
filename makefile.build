@@ -7,19 +7,20 @@ $(OBJS): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 $(OBJS_CPP): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
 
+
 .PHONY: $(TARGET_EXE)
 $(TARGET_EXE): $(OBJ_TARGET_EXE) | $(OBJ_DIR)
-	@[ -L $@ ] || ln -sr $^
+	@[ -L $@ ] || ln -sr $<
 
 .PHONY: $(TARGET_LIB)
 $(TARGET_LIB): $(OBJ_TARGET_LIB) | $(OBJ_DIR)
-	@[ -L $@ ] || ln -sr $^
+	@[ -L $@ ] || ln -sr $<
 
 $(TARGET_LIB_A): $(OBJ_TARGET_LIB_A) | $(OBJ_DIR)
-	@[ -L $@ ] || ln -sr $^
+	@[ -L $@ ] || ln -sr $<
 
 $(TARGET_LIB_SO): $(OBJ_TARGET_LIB_SO) | $(OBJ_DIR)
-	@[ -L $@ ] || ln -sr $^
+	@[ -L $@ ] || ln -sr $<
 
 
 $(OBJ_TARGET_EXE): $(OBJS) $(OBJS_CPP) | $(OBJ_DIR)
@@ -29,6 +30,7 @@ $(OBJ_TARGET_LIB): $(OBJ_TARGET_LIB)($(OBJS) $(OBJS_CPP)) | $(OBJ_DIR)
 $(OBJ_TARGET_LIB_A): $(OBJ_TARGET_LIB_A)($(OBJS) $(OBJS_CPP)) | $(OBJ_DIR)
 
 $(OBJ_TARGET_LIB_SO): $(OBJ_TARGET_LIB_SO)($(OBJS) $(OBJS_CPP)) | $(OBJ_DIR)
+
 
 .PHONY: $(OBJ_DIR)
 $(OBJ_DIR):

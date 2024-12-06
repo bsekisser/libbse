@@ -17,4 +17,6 @@ include makefile.setup
 
 $(OBJ_TARGET_LIB_SO): $(OBJ_TARGET_LIB_A)
 
+$(TARGET_LIB_SO): $(TARGET_LIB_A)
+
 include makefile.build
