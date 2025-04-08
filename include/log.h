@@ -43,7 +43,9 @@
 	}
 
 
+#define LOGp64(_x) LOG("%s: 0x%016" PRIxPTR, #_x, (uintptr_t)_x)
 #define LOGu(_x) LOG("%s: %u", #_x, _x)
+#define LOGx64(_x) LOG("%s: 0x%016" PRIx64, #_x, (uint64_t)_x)
 #define LOGx32(_x) LOG("%s: 0x%08x", #_x, _x)
 #define LOGzu(_x) LOG("%s: %zu", #_x, _x)
 #define LOGzx32(_x) LOG("%s: 0x%08zx", #_x, _x)
