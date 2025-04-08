@@ -7,6 +7,7 @@
 /* pos-bits bitfield helper operations */
 
 #define pbBF(_pos, _bits)						(_LSL(_BM(_bits), _pos))
+#define pbBFC(_pos, _bits)						(~pbBF(_pos, _bits))
 #define pbBFR(_pos, _bits)						(_LSL_MASKED(_BM(_bits), ~(_pos)))
 
 #define _BFLJ(_data, _pos, _bits)				__bitfield_pb_bflj(_data, _pos, _bits)
@@ -23,7 +24,7 @@ static inline unsigned __bitfield_pb_bfljr(unsigned data, unsigned pos, unsigned
 
 #define pbBFCLR(_data, _pos, _bits)				_bitfield_pb_bfclr(_data, _pos, _bits)
 static inline unsigned _bitfield_pb_bfclr(unsigned data, unsigned pos, unsigned bits) {
-	return((data) & _BFC(pos, bits));
+	return((data) & pbBFC(pos, bits));
 }
 
 #define pbBFEXT(_data, _pos, _bits)				((typeof(_data))_bitfield_pb_bfext(_data, _pos, _bits))
