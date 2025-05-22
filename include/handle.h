@@ -19,9 +19,9 @@
 #undef DEBUG
 //#define DEBUG(_x) _x
 
-#ifndef DEBUG
-	#define DEBUG(_x)
-#endif
+#include "debug.h"
+
+/* **** */
 
 #define HANDLE_CALLOC(_h, _nmemb, _size) handle_calloc((void* *const)_h, _nmemb, _size)
 static inline void* handle_calloc(void* *const h, size_t nmemb, size_t size) {
