@@ -23,47 +23,59 @@
 
 /* **** */
 
-#define HANDLE_CALLOC(_h, _nmemb, _size) handle_calloc((void* *const)_h, _nmemb, _size)
-static inline void* handle_calloc(void* *const h, size_t nmemb, size_t size) {
-	ERR_NULL(h);
-//	ERR_IF(*h);
+static inline
+void* _handle_calloc(void *const h0, void* *const p0)
+{
+	ERR_NULL(p0);
 
-	void *const p = calloc(nmemb, size);
-	*h = p;
+	void** *const p = (void***)&p0[1];
+	*p0 = h0;
 
-	DEBUG(LOG("h = 0x%08" PRIxPTR ", p = 0x%08" PRIxPTR ", nmemb = 0x%08zx, size = 0x%08zx",
-		(uintptr_t)h, (uintptr_t)p, nmemb, size));
+	if(h0) *(void**)h0 = p;
 
-	return(p);
-}
-
-#define HANDLE_MALLOC(_h, _size) handle_malloc((void* *const)_h, _size)
-static inline void* handle_malloc(void* *const h, size_t size) {
-	ERR_NULL(h);
-//	ERR_IF(*h);
-
-	void *const p = malloc(size);
-	*h = p;
+	DEBUG(
+		LOG_START("h0: 0x%016" PRIxPTR, (uintptr_t)h0);
+		_LOG_("->(p = 0x%016" PRIxPTR ")", (uintptr_t)p);
+		LOG_END(", p0: 0x%016" PRIxPTR, (uintptr_t)p0);
+	);
 
 	return(p);
 }
 
-#define HANDLE_FREE(_h) handle_free((void**)_h)
-static inline void handle_free(void** h) {
-	void* p = h ? *h : 0;
+static inline void* handle_calloc(void *const h0, const size_t nmemb, const size_t size)
+{
+	void* *const p0 = (void**)calloc(nmemb, sizeof(void*) + (nmemb * size));
 
-	DEBUG(LOG_START("h = 0x%08" PRIxPTR, (uintptr_t)h));
-	DEBUG(LOG_END(", p = 0x%08" PRIxPTR, (uintptr_t)p));
+	return(_handle_calloc(h0, p0));
+}
 
-	ERR_NULL(h);
-	ERR_NULL(p);
+static inline void* handle_malloc(void *const h0, const size_t size)
+{
+	void* *const p0 = (void**)malloc(sizeof(void*) + size);
 
-	if(0 == h)
-		LOG_ACTION(return);
+	return(_handle_calloc(h0, p0));
+}
 
-	if(0 == p)
-		LOG_ACTION(return);
+static inline
+void handle_ptrfree(void *const p)
+{
+	if(!p) return;
 
-	*h = 0;
-	free(p);
+	void** p0 = &((void**)p)[-1];
+
+	void* *const h0 = (void**)*p0;
+
+	DEBUG(
+		LOG_START("h0: 0x%016" PRIxPTR, (uintptr_t)h0);
+		_LOG_("->(p = 0x%016" PRIxPTR ")", (uintptr_t)p);
+		LOG_END(", p0: 0x%016" PRIxPTR, (uintptr_t)p0);
+	);
+
+	if(h0) {
+		DEBUG(LOG("*h0: 0x%016" PRIxPTR, (uintptr_t)*h0));
+		if(*h0 == p) {
+			free(p0);
+			*h0 = 0;
+		}
+	}
 }
