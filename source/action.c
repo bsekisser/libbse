@@ -1,6 +1,9 @@
 #include "action.h"
 
+/* **** */
+
 #include "log.h"
+#include "unused.h"
 
 /* **** */
 
@@ -19,7 +22,7 @@ action_log_t action_log;
 
 /* **** */
 
-int _action_handler(int err, void *const param, action_ref action, action_handler_ref handler, const int)
+int _action_handler(int err, void *const param, action_ref action, action_handler_ref handler, const char *const name)
 {
 	void* action_param = param + handler->param_offset;
 	const unsigned is_list = handler->is_list;
@@ -32,8 +35,12 @@ int _action_handler(int err, void *const param, action_ref action, action_handle
 		_LOG_(", handler: 0x%016" PRIxPTR, (uintptr_t)handler);
 		_LOG_(", action_param: 0x%016" PRIxPTR, (uintptr_t)action_param);
 		_LOG_(", param: 0x%016" PRIxPTR, (uintptr_t)param);
-		_LOG_(", subhandler: %u", subhandler);
-		LOG_END(", is_list: %u", is_list);
+		_LOG_(", is_list: %u", is_list);
+		if(name) {
+			LOG_END(" -- %s", name);
+		} else {
+			LOG_END();
+		}
 	);
 
 	if(is_list)
@@ -46,6 +53,7 @@ int _action_handler(int err, void *const param, action_ref action, action_handle
 	if(!handler->fn) return(err);
 
 	return(handler->fn(err, action_param, action));
+	UNUSED(name); // debug use only
 }
 
 int action_handler(int err, void *const param, action_ref action, action_list_ref action_list)
@@ -57,8 +65,12 @@ int action_handler(int err, void *const param, action_ref action, action_list_re
 		LOG_START("action_list: 0x%016" PRIxPTR, (uintptr_t)action_list);
 		_LOG_(", handler: 0x%016" PRIxPTR, (uintptr_t)handler);
 		_LOG_(", handler_param: 0x%016" PRIxPTR, (uintptr_t)handler_param);
-		LOG_END(", (param: 0x%016" PRIxPTR ")", (uintptr_t)param);
-
+		_LOG_(", (param: 0x%016" PRIxPTR ")", (uintptr_t)param);
+		if(action_list->name) {
+			LOG_END(" -- %s", action_list->name);
+		} else {
+			LOG_END();
+		}
 	);
 
 	switch(action) {
@@ -69,7 +81,7 @@ int action_handler(int err, void *const param, action_ref action, action_list_re
 	action_handler_ref subhandler_list = action_list->sublist;
 	if(subhandler_list) {
 		for(action_handler_ptr subhandler = subhandler_list; subhandler->fn; subhandler++)
-			err |= _action_handler(err, param, action, subhandler, 1);
+			err |= _action_handler(err, param, action, subhandler, action_list->sublist_name);
 	}
 
 	switch(action) {

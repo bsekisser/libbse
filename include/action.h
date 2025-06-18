@@ -57,7 +57,12 @@ typedef struct action_handler_tag {
 typedef struct action_list_tag {
 	action_handler_t list[__ACTION_COUNT_];
 	action_handler_ref sublist;
+	const char *const sublist_name;
+	const char *const name;
 }action_list_t;
+
+#define ACTION_LIST(_x, ...) action_list_t _x = { .name = #_x, ##__VA_ARGS__ }
+#define SUBLIST(_x) .sublist = _x, .sublist_name = #_x
 
 int action_handler(int err, void *const param, action_ref action, action_list_ref action_list);
 
