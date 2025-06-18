@@ -2,6 +2,7 @@
 
 /* **** */
 
+#include "err_test.h"
 #include "log.h"
 #include "unused.h"
 
@@ -22,6 +23,7 @@ action_log_t action_log;
 
 /* **** */
 
+static
 int _action_handler(int err, void *const param, action_ref action, action_handler_ref handler, const char *const name)
 {
 	void* action_param = param + handler->param_offset;
@@ -56,10 +58,32 @@ int _action_handler(int err, void *const param, action_ref action, action_handle
 	UNUSED(name); // debug use only
 }
 
+static
+void _action_handler_link(void *const param, action_linklist_ptr link)
+{
+	if(!link) return;
+
+	for(; link->fn; link++) {
+		void* (*fn)(void) = link->fn;
+		void* *const p = param + link->member_offset;
+
+		*p = fn();
+
+		DEBUG(
+			LOG_START("((param: 0x%016" PRIxPTR, (uintptr_t)param);
+			_LOG_(", offset: %08x), p: 0x%016" PRIxPTR, link->member_offset, (uintptr_t)p);
+			LOG_END(", fn: 0x%016" PRIxPTR ")<-- 0x%016" PRIxPTR, (uintptr_t)fn, (uintptr_t)*p);
+		);
+
+		ERR_NULL(*p);
+	}
+}
+
 int action_handler(int err, void *const param, action_ref action, action_list_ref action_list)
 {
 	action_handler_ref handler = &action_list->list[action];
 	void *const handler_param = param + handler->param_offset;
+	void* *const self = (void**)action_list->self;
 
 	DEBUG(
 		LOG_START("action_list: 0x%016" PRIxPTR, (uintptr_t)action_list);
@@ -73,8 +97,11 @@ int action_handler(int err, void *const param, action_ref action, action_list_re
 		}
 	);
 
+	if(self) *self = param;
+
 	switch(action) {
 		case _ACTION_EXIT: break;
+		case _ACTION_LINK: _action_handler_link(param, action_list->link); break;
 		default: err |= _action_handler(err, handler_param, action, handler, 0); break;
 	}
 
@@ -88,6 +115,8 @@ int action_handler(int err, void *const param, action_ref action, action_list_re
 		case _ACTION_EXIT: err |= _action_handler(err, handler_param, action, handler, 0); break;
 		default: break;
 	}
+
+	if(self) *self = 0;
 
 	return(err);
 }

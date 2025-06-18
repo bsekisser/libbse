@@ -2,12 +2,17 @@
 
 /* **** */
 
+#include "log.h"
+
+/* **** */
+
 typedef enum action_enum {
 	_ACTION_INVALID,
 	_ACTION_ALLOC,
 	_ACTION_ALLOC_INIT,
 	_ACTION_EXIT,
 	_ACTION_INIT,
+	_ACTION_LINK,
 	_ACTION_PAUSE,
 	_ACTION_PAUSE_CHECK,
 	_ACTION_RESET,
@@ -39,6 +44,9 @@ typedef int (*action_handler_fn)(int err, void *const param, action_ref action);
 typedef struct action_handler_tag* action_handler_ptr;
 typedef action_handler_ptr const action_handler_ref;
 
+typedef struct action_linklist_tag* action_linklist_ptr;
+typedef action_linklist_ptr const action_linklist_ref;
+
 typedef struct action_list_tag* action_list_ptr;
 typedef action_list_ptr const action_list_ref;
 
@@ -54,8 +62,15 @@ typedef struct action_handler_tag {
 	int param_offset;
 }action_handler_t;
 
+typedef struct action_linklist_tag {
+	int member_offset;
+	void* fn;
+}action_linklist_t;
+
 typedef struct action_list_tag {
+	action_linklist_ref link;
 	action_handler_t list[__ACTION_COUNT_];
+	const void *const self;
 	action_handler_ref sublist;
 	const char *const sublist_name;
 	const char *const name;
