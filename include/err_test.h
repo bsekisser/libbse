@@ -56,7 +56,7 @@
 
 #define assert_abort_msg(_test, _msg, ...) \
 	{ \
-		int result = _test; \
+		const int result = _test; \
 		if(!result) { \
 			ERR_LOG(_msg, ##__VA_ARGS__); \
 			assert(_test); \

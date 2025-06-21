@@ -14,7 +14,8 @@
 
 /* **** */
 
-static uint64_t calibrate_get_dtime_loop(void)
+static
+uint64_t calibrate_get_dtime_loop(void)
 {
 	int i = 0;
 
@@ -29,7 +30,8 @@ static uint64_t calibrate_get_dtime_loop(void)
 
 }
 
-static uint64_t calibrate_get_dtime_sleep(void)
+static
+uint64_t calibrate_get_dtime_sleep(void)
 {
 	const uint64_t start = get_dtime();
 
@@ -41,19 +43,17 @@ static uint64_t calibrate_get_dtime_sleep(void)
 uint64_t dtime_calibrate(void)
 {
 	const uint64_t cycleTime = calibrate_get_dtime_loop();
-	uint64_t elapsedTime, ecdt;
-	double emhz;
+	uint64_t elapsedTime = 0, ecdt = 0;
+	double emhz = 0;
 
-	printf("%s: calibrate_get_dtime_cycles(%016" PRIu64 ")\n", __func__, cycleTime);
-
-	elapsedTime = 0;
+	LOG("calibrate_get_dtime_cycles(%016" PRIu64 ")\n", cycleTime);
 
 	for(int i = 1; i <= 3; i++) {
 		elapsedTime += (calibrate_get_dtime_sleep() - cycleTime);
 
 		ecdt = elapsedTime / i;
 		emhz = (double)ecdt / MHz(1.0);
-		printf("%s: elapsed time: %016" PRIu64 ", ecdt: %016" PRIu64 ", estMHz: %010.4f\n", __func__, elapsedTime, ecdt, emhz);
+		LOG("elapsed time: %016" PRIu64 ", ecdt: %016" PRIu64 ", estMHz: %010.4f\n", elapsedTime, ecdt, emhz);
 	}
 	return(ecdt);
 }

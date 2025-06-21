@@ -12,8 +12,7 @@ action_log_t action_log;
 
 /* **** */
 
-//#define DEBUG(_x) _x
-
+#define _DEBUG 0
 #include "debug.h"
 
 /* **** */

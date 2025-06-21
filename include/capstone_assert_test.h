@@ -9,7 +9,7 @@
 
 #define ucs_assert_err(_ucs, _expect, _test) \
 	({ \
-		_ucs ## _err __err = (_test); \
+		const _ucs ## _err __err = (_test); \
 		ucs_assert_abort_msg(__err != _expect, "%s", _ucs ## _strerror(__err)); \
 	})
 

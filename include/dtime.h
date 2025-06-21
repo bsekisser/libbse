@@ -28,7 +28,8 @@
 /* **** */
 
 #ifdef __intel__
-	__STATIC__ __INLINE__ uint64_t get_dtime(void) {
+	__STATIC__ __INLINE__
+	uint64_t get_dtime(void) {
 		uint32_t hi, lo;
 
 #if 0
@@ -44,7 +45,8 @@
 		return(((uint64_t)hi << 32) | (uint64_t)lo);
 	}
 #else
-	__STATIC__ __INLINE__ uint64_t get_dtime(void) {
+	__STATIC__ __INLINE__
+	uint64_t get_dtime(void) {
 		struct timespec ts;
 		if(0 > clock_gettime(CLOCK_MONOTONIC, &ts)) {
 			perror("clock_gettime");
@@ -59,6 +61,7 @@
 
 uint64_t dtime_calibrate(void);
 
-__STATIC__ __INLINE__ uint64_t _get_dtime_elapsed(uint64_t last) {
+__STATIC__ __INLINE__
+uint64_t _get_dtime_elapsed(const uint64_t last) {
 	return(get_dtime() - last);
 }

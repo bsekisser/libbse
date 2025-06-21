@@ -1,7 +1,8 @@
 #pragma once
 
 #ifndef UNUSED
-	static inline void __unused(int vvoid, ...) {
+	static inline
+	void __unused(const int vvoid, ...) {
 		(void)vvoid;
 	}
 

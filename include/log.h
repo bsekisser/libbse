@@ -2,6 +2,7 @@
 
 /* **** system includes */
 
+#include <inttypes.h>
 #include <stdio.h>
 
 /* **** */

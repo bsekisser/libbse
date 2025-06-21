@@ -1,5 +1,6 @@
 #define typeof_access(_name, _type) \
-	static inline _type _name##_access(_type *const data, _type *const write) \
+	static inline
+	_type _name##_access(_type *const data, _type *const write) \
 	{ \
 		if(write) \
 			*data = *write; \

@@ -22,7 +22,8 @@
 /* **** */
 
 #define BFXsASR(_p2data, _bits) _bitfield_xs_asr(_p2data, _bits)
-static inline signed _bitfield_xs_asr(signed *const p2data, unsigned bits) {
+static inline
+signed _bitfield_xs_asr(signed *const p2data, const unsigned bits) {
 	const signed data = _bitfield_pb_bfexts(*p2data, 0, bits);
 	*p2data = _ASR(*p2data, bits);
 
@@ -30,7 +31,8 @@ static inline signed _bitfield_xs_asr(signed *const p2data, unsigned bits) {
 }
 
 #define BFXsLSR(_p2data, _bits) _bitfield_xs_lsr(_p2data, _bits)
-static inline signed _bitfield_xs_lsr(signed *const p2data, unsigned bits) {
+static inline
+signed _bitfield_xs_lsr(signed *const p2data, const unsigned bits) {
 	const signed data = _bitfield_pb_bfexts(*p2data, 0, bits);
 	*p2data = _LSR(*p2data, bits);
 
@@ -38,7 +40,8 @@ static inline signed _bitfield_xs_lsr(signed *const p2data, unsigned bits) {
 }
 
 #define BFXuASR(_p2data, _bits) _bitfield_xu_asr(_p2data, _bits)
-static inline unsigned _bitfield_xu_asr(unsigned *const p2data, unsigned bits) {
+static inline
+unsigned _bitfield_xu_asr(unsigned *const p2data, const unsigned bits) {
 	const unsigned data = _bitfield_pb_bfext(*p2data, 0, bits);
 	*p2data = _ASR(*p2data, bits);
 
@@ -46,7 +49,8 @@ static inline unsigned _bitfield_xu_asr(unsigned *const p2data, unsigned bits) {
 }
 
 #define BFXuLSR(_p2data, _bits) _bitfield_xu_lsr(_p2data, _bits)
-static inline unsigned _bitfield_xu_lsr(unsigned *const p2data, unsigned bits) {
+static inline
+unsigned _bitfield_xu_lsr(unsigned *const p2data, const unsigned bits) {
 	const unsigned data = _bitfield_pb_bfext(*p2data, 0, bits);
 	*p2data = _LSR(*p2data, bits);
 

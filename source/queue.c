@@ -19,7 +19,7 @@ size_t queue_count(queue_ref q)
 
 	size_t count = 0;
 
-	for(qelem_p e = q->head; e; count++)
+	for(qelem_ptr e = q->head; e; count++)
 		e = e->next;
 
 	return(count);
@@ -36,7 +36,7 @@ int queue_dequeue(qelem_ref e, qelem_ref p2lhs, queue_ref q)
 	else if(e == q->tail)
 		(void)queue_pop_back(q, p2lhs);
 	else {
-		qelem_p lhs = p2lhs;
+		qelem_ptr lhs = p2lhs;
 
 		if(!lhs) {
 			queue_iterator_t qi;
@@ -58,7 +58,7 @@ int queue_dequeue(qelem_ref e, qelem_ref p2lhs, queue_ref q)
 	return(1);
 }
 
-qelem_p queue_dequeue_next(queue_ref q)
+qelem_ptr queue_dequeue_next(queue_ref q)
 {
 	assert(q);
 
@@ -92,7 +92,7 @@ void queue_exit(queue_ref q)
 {
 	assert(q);
 
-	qelem_p e = q->head;
+	qelem_ptr e = q->head;
 
 	do {
 		qelem_ref next = e->next;
@@ -105,10 +105,10 @@ void queue_exit(queue_ref q)
 	free(q);
 }
 
-queue_p queue_init(queue_p q)
+queue_ptr queue_init(queue_ptr q)
 {
 	if(!q)
-		q = (queue_p)malloc(sizeof(queue_t));
+		q = malloc(sizeof(queue_t));
 
 	assert(q);
 
@@ -141,7 +141,7 @@ void queue_insert_sorted(qelem_ref e, queue_ref q, queue_sort_fn const fn)
 	int restarts = 4;
 
 restart_sort:;
-	qelem_p lhs = 0, rhs = 0;
+	qelem_ptr lhs = 0, rhs = 0;
 	while(queue_next(&lhs, &rhs, q)) {
 		switch(fn(lhs, e, rhs)) {
 		case QSORT_DROP:
@@ -171,7 +171,7 @@ void queue_iterator_init(queue_iterator_ref qi, queue_ref q)
 	return(queue_iterator_reset(qi));
 }
 
-qelem_p queue_iterator_next(queue_iterator_ref qi)
+qelem_ptr queue_iterator_next(queue_iterator_ref qi)
 { return(queue_next(&qi->lhs, &qi->cqe, qi->q)); }
 
 void queue_iterator_reset(queue_iterator_ref qi)
@@ -223,7 +223,7 @@ int queue_iterator_search_step(queue_iterator_search_ref qis, void *const param)
 	return(-1);
 }
 
-qelem_p queue_next(qelem_href h2lhs, qelem_href h2rhs, queue_ref q)
+qelem_ptr queue_next(qelem_href h2lhs, qelem_href h2rhs, queue_ref q)
 {
 	assert(q);
 
@@ -240,12 +240,12 @@ qelem_p queue_next(qelem_href h2lhs, qelem_href h2rhs, queue_ref q)
 	return(next);
 }
 
-qelem_p queue_pop_back(queue_ref q, qelem_ref p2lhs)
+qelem_ptr queue_pop_back(queue_ref q, qelem_ref p2lhs)
 {
 	assert(q);
 
-	qelem_p lhs = p2lhs;
-	qelem_ref tail = q->tail;
+	qelem_ptr lhs = p2lhs;
+	const qelem_ref tail = q->tail;
 
 	if(!lhs) {
 		queue_iterator_t qi;
@@ -267,7 +267,7 @@ qelem_p queue_pop_back(queue_ref q, qelem_ref p2lhs)
 	return(tail);
 }
 
-qelem_p queue_pop_front(queue_ref q)
+qelem_ptr queue_pop_front(queue_ref q)
 {
 	assert(q);
 

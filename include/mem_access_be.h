@@ -15,7 +15,8 @@
 
 /* **** */
 
-static inline unsigned mem_0x0be__access_read(void *const p2src, size_t size) {
+static inline
+unsigned mem_0x0be__access_read(void *const p2src, const size_t size) {
 	__test_assert_size(sizeof(unsigned) <= size);
 
 	uint32_t res = 0;
@@ -27,7 +28,8 @@ static inline unsigned mem_0x0be__access_read(void *const p2src, size_t size) {
 	return(res);
 }
 
-static inline void mem_0x0be__access_write(void *const p2dst, size_t size, uint32_t data) {
+static inline
+void mem_0x0be__access_write(void *const p2dst, const size_t size, const uint32_t data) {
 	__test_assert_size(sizeof(unsigned) <= size);
 
 	uint8_t* dst = (uint8_t*)p2dst;
@@ -36,7 +38,8 @@ static inline void mem_0x0be__access_write(void *const p2dst, size_t size, uint3
 		*dst++ = (data >> (((size - 1) - i) << 3)) & 0xff;
 }
 
-static inline unsigned mem_0x0be_access(void *const p2pat, size_t size, unsigned *const write) {
+static inline
+unsigned mem_0x0be_access(void *const p2pat, const size_t size, unsigned *const write) {
 	const unsigned data = write ? *write : mem_0x0be__access_read(p2pat, size);
 
 	if(write)
@@ -45,7 +48,8 @@ static inline unsigned mem_0x0be_access(void *const p2pat, size_t size, unsigned
 	return(data);
 }
 
-static inline unsigned mem_16be_access(void *const p2pat, unsigned *const write) {
+static inline
+unsigned mem_16be_access(void *const p2pat, unsigned *const write) {
 	const unsigned data = write ? *write : htobe16(*(uint16_t*)p2pat);
 
 	if(write)
@@ -63,7 +67,8 @@ static unsigned mem_32be_access(void *const p2pat, unsigned *const write) {
 	return(data);
 }
 
-static inline unsigned mem_64be_access(void *const p2pat, unsigned *const write) {
+static inline
+unsigned mem_64be_access(void *const p2pat, unsigned *const write) {
 	if(sizeof(unsigned) <= sizeof(uint64_t))
 		return(mem_0x0be_access(p2pat, sizeof(uint64_t), write));
 
@@ -75,7 +80,8 @@ static inline unsigned mem_64be_access(void *const p2pat, unsigned *const write)
 	return(data);
 }
 
-static inline unsigned mem_access_be(void *const p2pat, size_t size, unsigned *const write) {
+static inline
+unsigned mem_access_be(void *const p2pat, const size_t size, unsigned *const write) {
 	switch(size) {
 //		case 8:
 //			return(mem_64be_access(p2pat, write));

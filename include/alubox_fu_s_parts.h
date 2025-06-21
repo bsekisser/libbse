@@ -17,8 +17,10 @@
 
 #define __unsigned_bits ((sizeof(unsigned) << 3) - 1)
 
-typedef struct alubox_psr_t* alubox_psr_p;
-typedef struct alubox_psr_t {
+typedef struct alubox_psr_tag* alubox_psr_ptr;
+typedef alubox_psr_ptr const alubox_psr_ref;
+
+typedef struct alubox_psr_tag {
 	union {
 		unsigned raw_flags;
 		struct {
@@ -31,8 +33,10 @@ typedef struct alubox_psr_t {
 	};
 }alubox_psr_t;
 
-typedef struct alubox_t* alubox_p;
-typedef struct alubox_t {
+typedef struct alubox_tag* alubox_ptr;
+typedef alubox_ptr const alubox_ref;
+
+typedef struct alubox_tag {
 	unsigned result;
 	alubox_psr_t psr;
 	union {
@@ -46,7 +50,8 @@ typedef struct alubox_t {
 
 /* **** */
 
-static inline unsigned __alubox_fu__flags_nz(alubox_p alu, unsigned result)
+static inline
+unsigned __alubox_fu__flags_nz(alubox_ref alu, const unsigned result)
 {
 	if(alu && alu->flags.s) {
 		alu->result = result;
@@ -58,7 +63,7 @@ static inline unsigned __alubox_fu__flags_nz(alubox_p alu, unsigned result)
 	return(result);
 }
 
-static inline void __alubox_fu__flags_s_wb(alubox_p alu, unsigned s, unsigned wb)
+static inline void __alubox_fu__flags_s_wb(alubox_ref alu, const unsigned s, const unsigned wb)
 {
 	if(alu) {
 		alu->flags.s = s;
@@ -78,7 +83,8 @@ static inline void __alubox_fu__flags_s_wb(alubox_p alu, unsigned s, unsigned wb
  *
  */
 
-static inline unsigned __alubox_fu__flags_add(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu__flags_add(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	const unsigned result = s1 + s2;
 
@@ -93,31 +99,36 @@ static inline unsigned __alubox_fu__flags_add(alubox_p alu, unsigned s1, unsigne
 	return(__alubox_fu__flags_nz(alu, result));
 }
 
-static inline unsigned __alubox_fu__flags_sub(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu__flags_sub(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_add(alu, s1, -s2));
 }
 
 /* **** */
 
-static inline unsigned __alubox_fu_s_adc(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_adc(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	const unsigned carry_in = alu ? alu->psr.c : 0;
 	return(__alubox_fu__flags_add(alu, s1, s2 + carry_in));
 }
 
-static inline unsigned __alubox_fu_s_add(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_add(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_add(alu, s1, s2));
 }
 
-static inline unsigned __alubox_fu_s_and(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_and(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	const unsigned carry_in = alu ? alu->psr.c : 0;
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_and(0, s1, s2, carry_in)));
 }
 
-static inline unsigned __alubox_fu_s_asr(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_asr(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	int carry_out = 0;
 	const unsigned result = _asr_vc(s1, s2, &carry_out);
@@ -128,42 +139,50 @@ static inline unsigned __alubox_fu_s_asr(alubox_p alu, unsigned s1, unsigned s2)
 	return(__alubox_fu__flags_nz(alu, result));
 }
 
-static inline unsigned __alubox_fu_s_bclr(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_bclr(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_bclr(0, s1, s2, 0)));
 }
 
-static inline unsigned __alubox_fu_s_bext(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_bext(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_bext(0, s1, s2, 0)));
 }
 
-static inline unsigned __alubox_fu_s_bic(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_bic(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu_s_and(alu, s1, ~s2));
 }
 
-static inline unsigned __alubox_fu_s_bset(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_bset(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_bset(0, s1, s2, 0)));
 }
 
-static inline unsigned __alubox_fu_s_btst(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_btst(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_btst(0, s1, s2, 0)));
 }
 
-static inline unsigned __alubox_fu_s_bxor(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_bxor(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_bxor(0, s1, s2, 0)));
 }
 
-static inline unsigned __alubox_fu_s_eor(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_eor(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_eor(0, s1, s2, 0)));
 }
 
-static inline unsigned __alubox_fu_s_lsl(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_lsl(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	unsigned carry_out = 0;
 	const unsigned result = _lsl_vc(s1, s2, &carry_out);
@@ -174,7 +193,8 @@ static inline unsigned __alubox_fu_s_lsl(alubox_p alu, unsigned s1, unsigned s2)
 	return(__alubox_fu__flags_nz(alu, result));
 }
 
-static inline unsigned __alubox_fu_s_lsr(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_lsr(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	unsigned carry_out = 0;
 	const unsigned result = _lsr_vc(s1, s2, &carry_out);
@@ -185,43 +205,51 @@ static inline unsigned __alubox_fu_s_lsr(alubox_p alu, unsigned s1, unsigned s2)
 	return(__alubox_fu__flags_nz(alu, result));
 }
 
-static inline unsigned __alubox_fu_s_mod(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_mod(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_mod(0, s1, s2, 0)));
 }
 
-static inline unsigned __alubox_fu_s_mov(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_mov(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_mov(0, s1, s2, 0)));
 }
 
-static inline unsigned __alubox_fu_s_mul(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_mul(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_mul(0, s1, s2, 0)));
 }
 
-static inline unsigned __alubox_fu_s_mul_acc(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_mul_acc(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	unsigned acc = alu ? alu->result : 0;
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_mul_acc(acc, s1, s2, 0)));
 }
 
-static inline unsigned __alubox_fu_s_mvn(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_mvn(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_mvn(0, s1, s2, 0)));
 }
 
-static inline unsigned __alubox_fu_s_orr(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_orr(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_orr(0, s1, s2, 0)));
 }
 
-static inline unsigned __alubox_fu_s_ror(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_ror(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_ror(0, s1, s2, 0)));
 }
 
-static inline unsigned __alubox_fu_s_rrx(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_rrx(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	const unsigned carry_in = alu ? alu->psr.c : 0;
 
@@ -231,49 +259,57 @@ static inline unsigned __alubox_fu_s_rrx(alubox_p alu, unsigned s1, unsigned s2)
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_rrx(0, s1, s2, carry_in)));
 }
 
-static inline unsigned __alubox_fu_s_rsb(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_rsb(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_sub(alu, s2, s1));
 }
 
-static inline unsigned __alubox_fu_s_rsc(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_rsc(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	const unsigned carry_in = alu ? alu->psr.c : 0;
 	return(__alubox_fu__flags_sub(alu, s2, s1 + carry_in));
 }
 
-static inline unsigned __alubox_fu_s_sbc(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_sbc(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	const unsigned carry_in = alu ? alu->psr.c : 0;
 	return(__alubox_fu__flags_sub(alu, s1, s2 + carry_in));
 }
 
-static inline unsigned __alubox_fu_s_sub(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_sub(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	return(__alubox_fu__flags_sub(alu, s1, s2));
 }
 
 /* **** */
 
-static inline unsigned __alubox_fu_s_cmn(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_cmn(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	__alubox_fu__flags_s_wb(alu, 1, 0);
 	return(__alubox_fu_s_add(alu, s1, s2));
 }
 
-static inline unsigned __alubox_fu_s_cmp(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_cmp(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	__alubox_fu__flags_s_wb(alu, 1, 0);
 	return(__alubox_fu_s_sub(alu, s1, s2));
 }
 
-static inline unsigned __alubox_fu_s_teq(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_teq(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	__alubox_fu__flags_s_wb(alu, 1, 0);
 	return(__alubox_fu_s_eor(alu, s1, s2));
 }
 
-static inline unsigned __alubox_fu_s_tst(alubox_p alu, unsigned s1, unsigned s2)
+static inline
+unsigned __alubox_fu_s_tst(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
 	__alubox_fu__flags_s_wb(alu, 1, 0);
 	return(__alubox_fu_s_and(alu, s1, s2));

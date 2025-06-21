@@ -16,9 +16,7 @@
 
 /* **** */
 
-#undef DEBUG
-//#define DEBUG(_x) _x
-
+#define _DEBUG 0
 #include "debug.h"
 
 /* **** */
@@ -26,7 +24,7 @@
 static inline
 void* _handle_calloc(void *const h0, void* *const p0)
 {
-	ERR_NULL(p0);
+	STDERR_NULL(p0);
 
 	void** *const p = (void***)&p0[1];
 	*p0 = h0;
@@ -42,14 +40,16 @@ void* _handle_calloc(void *const h0, void* *const p0)
 	return(p);
 }
 
-static inline void* handle_calloc(void *const h0, const size_t nmemb, const size_t size)
+static inline
+void* handle_calloc(void *const h0, const size_t nmemb, const size_t size)
 {
 	void* *const p0 = (void**)calloc(nmemb, sizeof(void*) + (nmemb * size));
 
 	return(_handle_calloc(h0, p0));
 }
 
-static inline void* handle_malloc(void *const h0, const size_t size)
+static inline
+void* handle_malloc(void *const h0, const size_t size)
 {
 	void* *const p0 = (void**)malloc(sizeof(void*) + size);
 
@@ -61,7 +61,7 @@ void handle_ptrfree(void *const p)
 {
 	if(!p) return;
 
-	void** p0 = &((void**)p)[-1];
+	void* *const p0 = &((void**)p)[-1];
 
 	void* *const h0 = (void**)*p0;
 

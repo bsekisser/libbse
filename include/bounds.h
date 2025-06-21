@@ -1,6 +1,7 @@
 #pragma once
 
-static inline unsigned _in_bounds(unsigned check, unsigned size, unsigned min, unsigned max)
+static inline
+unsigned _in_bounds(const unsigned check, const unsigned size, const unsigned min, const unsigned max)
 {
 	return((check >= min) && (check <= (max - size)));
 }

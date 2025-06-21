@@ -18,12 +18,8 @@
 
 /* **** */
 
-#undef DEBUG
-//#define DEBUG(_x) _x
-
-#ifndef DEBUG
-	#define DEBUG(_x)
-#endif
+#define _DEBUG 0
+#include "debug.h"
 
 /* **** */
 
@@ -35,7 +31,7 @@ static const char* callback_qlist_type[_LIST_TYPE_COUNT] = {
 
 /* **** */
 
-static void _callback_qlist_init(callback_qlist_p const cbl, unsigned int type)
+static void _callback_qlist_init(callback_qlist_ref cbl, const unsigned int type)
 {
 	ERR_NULL(cbl);
 
@@ -52,19 +48,23 @@ static void _callback_qlist_init(callback_qlist_p const cbl, unsigned int type)
 
 	cbl->type = type;
 
-	DEBUG(LOG_START("-->> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
-	DEBUG(_LOG_(", count = 0x%08x", cbl->count));
-	DEBUG(LOG_END(", type = 0x%08x -- %s", cbl->type, callback_qlist_type[cbl->type]));
+	DEBUG(
+		LOG_START("-->> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl);
+		_LOG_(", count = 0x%08x", cbl->count);
+		LOG_END(", type = 0x%08x -- %s", cbl->type, callback_qlist_type[cbl->type])
+	);
 
 	UNUSED(callback_qlist_type); /* squelch warning when not debugging */
 }
 
-static void _register_callback_fifo(callback_qlist_p const cbl,
-	callback_qlist_elem_p const cble)
+static void _register_callback_fifo(callback_qlist_ref cbl,
+	callback_qlist_elem_ref cble)
 {
-	DEBUG(LOG_START(">> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
-	DEBUG(_LOG_(", cble = 0x%08" PRIxPTR, (uintptr_t)cble));
-	DEBUG(LOG_END(", count = 0x%08x", cbl->count));
+	DEBUG(
+		LOG_START(">> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl);
+		_LOG_(", cble = 0x%08" PRIxPTR, (uintptr_t)cble);
+		LOG_END(", count = 0x%08x", cbl->count)
+	);
 
 	cble->next = 0;
 	cble->prev = cbl->tail;
@@ -80,16 +80,20 @@ static void _register_callback_fifo(callback_qlist_p const cbl,
 	cbl->tail = cble;
 
 	cbl->count++;
-	DEBUG(LOG_START("<< cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
-	DEBUG(LOG_END(", count = 0x%08x", cbl->count));
+	DEBUG(
+		LOG_START("<< cbl = 0x%08" PRIxPTR, (uintptr_t)cbl);
+		LOG_END(", count = 0x%08x", cbl->count)
+	);
 }
 
-static void _register_callback_lifo(callback_qlist_p const cbl,
-	callback_qlist_elem_p const cble)
+static void _register_callback_lifo(callback_qlist_ref cbl,
+	callback_qlist_elem_ref cble)
 {
-	DEBUG(LOG_START(">> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
-	DEBUG(_LOG_(", cble = 0x%08" PRIxPTR, (uintptr_t)cble));
-	DEBUG(LOG_END(", count = 0x%08x", cbl->count));
+	DEBUG(
+		LOG_START(">> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl);
+		_LOG_(", cble = 0x%08" PRIxPTR, (uintptr_t)cble);
+		LOG_END(", count = 0x%08x", cbl->count)
+	);
 
 	cble->next = cbl->head;
 	cble->prev = 0;
@@ -105,44 +109,50 @@ static void _register_callback_lifo(callback_qlist_p const cbl,
 		cbl->tail = cble;
 
 	cbl->count++;
-	DEBUG(LOG_START("<< cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
-	DEBUG(LOG_END(", count = 0x%08x", cbl->count));
+	DEBUG(
+		LOG_START("<< cbl = 0x%08" PRIxPTR, (uintptr_t)cbl);
+		LOG_END(", count = 0x%08x", cbl->count)
+	);
 }
 
 /* **** */
 
-void callback_qlist_init(callback_qlist_p const cbl, unsigned int type)
+void callback_qlist_init(callback_qlist_ref cbl, const unsigned int type)
 {
 	_callback_qlist_init(cbl, type);
 }
 
-void callback_qlist_alloc_init(callback_qlist_h h2cbl, unsigned int type)
+void callback_qlist_alloc_init(callback_qlist_href h2cbl, const unsigned int type)
 {
-	callback_qlist_p cbl = (callback_qlist_p)handle_calloc((void**)h2cbl, 1, sizeof(callback_qlist_t));
-	ERR_NULL(cbl);
+	callback_qlist_ref cbl = handle_calloc(h2cbl, 1, sizeof(callback_qlist_t));
+	STDERR_NULL(cbl);
 
 	_callback_qlist_init(cbl, type);
 }
 
-void callback_qlist_process(callback_qlist_p const cbl)
+void callback_qlist_ptrrocess(callback_qlist_ref cbl)
 {
 	ERR_NULL(cbl);
 
-	DEBUG(LOG_START(">> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
-	DEBUG(LOG_END(", count = 0x%08x", cbl->count));
+	DEBUG(
+		LOG_START(">> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl);
+		LOG_END(", count = 0x%08x", cbl->count);
+	);
 
-	callback_qlist_elem_p cble = 0;
-	callback_qlist_elem_p next = cbl->head;
+	callback_qlist_elem_ptr cble = 0;
+	callback_qlist_elem_ptr next = cbl->head;
 
-	DEBUG(unsigned i = 0);
+	unsigned i = 0;
 	while(next) {
 		cble = next;
 		next = cble->next;
 
-		DEBUG(LOG_START("-- cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
-		DEBUG(_LOG_(", cble = 0x%08" PRIxPTR, (uintptr_t)cble));
-		DEBUG(_LOG_(", count = 0x%08x", cbl->count));
-		DEBUG(LOG_END(", i = 0x%08x", i++));
+		DEBUG(
+			LOG_START("-- cbl = 0x%08" PRIxPTR, (uintptr_t)cbl);
+			_LOG_(", cble = 0x%08" PRIxPTR, (uintptr_t)cble);
+			_LOG_(", count = 0x%08x", cbl->count);
+			LOG_END(", i = 0x%08x", i++)
+		);
 
 		if(cble->fn)
 			cble->fn(cble->param);
@@ -151,17 +161,19 @@ void callback_qlist_process(callback_qlist_p const cbl)
 	DEBUG(LOG("<<"));
 }
 
-void callback_qlist_process_singleton_list(callback_qlist_p const cbl)
+void callback_qlist_ptrrocess_singleton_list(callback_qlist_ref cbl)
 {
 	ERR_NULL(cbl);
 
-	DEBUG(LOG_START(">> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
-	DEBUG(LOG_END(", count = 0x%08x", cbl->count));
+	DEBUG(
+		LOG_START(">> cbl = 0x%08" PRIxPTR, (uintptr_t)cbl);
+		LOG_END(", count = 0x%08x", cbl->count)
+	);
 
-	callback_qlist_elem_p cble = 0;
-	callback_qlist_elem_p next = cbl->head;
+	callback_qlist_elem_ptr cble = 0;
+	callback_qlist_elem_ptr next = cbl->head;
 
-	DEBUG(unsigned i = 0);
+	unsigned i = 0;
 	while(next) {
 		cble = next;
 		next = cble->next;
@@ -169,10 +181,12 @@ void callback_qlist_process_singleton_list(callback_qlist_p const cbl)
 		cbl->head = next;
 		cble->next = 0;
 
-		DEBUG(LOG_START("-- cbl = 0x%08" PRIxPTR, (uintptr_t)cbl));
-		DEBUG(_LOG_(", cble = 0x%08" PRIxPTR, (uintptr_t)cble));
-		DEBUG(_LOG_(", count = 0x%08x", cbl->count));
-		DEBUG(LOG_END(", i = 0x%08x", i++));
+		DEBUG(
+			LOG_START("-- cbl = 0x%08" PRIxPTR, (uintptr_t)cbl);
+			_LOG_(", cble = 0x%08" PRIxPTR, (uintptr_t)cble);
+			_LOG_(", count = 0x%08x", cbl->count);
+			LOG_END(", i = 0x%08x", i++)
+		);
 
 		if(cble->fn)
 			cble->fn(cble->param);
@@ -184,8 +198,8 @@ void callback_qlist_process_singleton_list(callback_qlist_p const cbl)
 	DEBUG(LOG("<<"));
 }
 
-void callback_qlist_register_callback(callback_qlist_p const cbl,
-	callback_qlist_elem_p const cble)
+void callback_qlist_register_callback(callback_qlist_ref cbl,
+	callback_qlist_elem_ref cble)
 {
 	ERR_NULL(cbl);
 	if(0 == cbl->type) {

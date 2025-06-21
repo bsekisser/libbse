@@ -1,10 +1,12 @@
 #pragma once
 
-typedef struct trace_t* trace_p;
-typedef struct trace_t {
-    char*				file;
-    char*				function;
-    int				line;
+typedef struct trace_tag* trace_ptr;
+typedef trace_ptr const trace_ref;
+
+typedef struct trace_tag {
+    char* file;
+    char* function;
+    int line;
 }trace_t;
 
 #define TRACE(_f, ...) \
@@ -13,7 +15,8 @@ typedef struct trace_t {
 	TRACE_T_TRACE(TRACE_T(), _f, ##__VA_ARGS__); \
     }
 
-static trace_p _trace_enter(trace_p trace, const char* file, const char* function, const int line)
+static
+trace_ptr _trace_enter(trace_ref trace, const char *const file, const char *const function, const int line)
 {
     trace->file = (char*)file;
     trace->function = (char*)function;
@@ -23,7 +26,7 @@ static trace_p _trace_enter(trace_p trace, const char* file, const char* functio
 
 #define TRACE_T() \
     _trace_enter(&trace, __FILE__, __func__, __LINE__ )
-    
+
 #define TRACE_T_TRACE(_trace, _f, ...) \
     { \
 	printf("%s:%s:@%06u: " _f "\n", _trace->file, _trace->function, _trace->line, ##__VA_ARGS__); \

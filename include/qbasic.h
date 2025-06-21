@@ -8,4 +8,4 @@
 	 * sound blocks until finished.
 	 */
 
-void sound(qbasic_p qb, uint16_t frequency, uint16_t duration);
+void sound(qbasic_ref qb, const uint16_t frequency, const uint16_t duration);

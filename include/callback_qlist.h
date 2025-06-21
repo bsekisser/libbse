@@ -23,21 +23,27 @@ enum {
 	_LIST_TYPE_COUNT,
 };
 
-typedef struct callback_qlist_elem_t* callback_qlist_elem_p;
-typedef struct callback_qlist_elem_t {
-	callback_qlist_elem_p next;
-	callback_qlist_elem_p prev;
+typedef struct callback_qlist_elem_tag* callback_qlist_elem_ptr;
+typedef callback_qlist_elem_ptr const callback_qlist_elem_ref;
+
+typedef struct callback_qlist_elem_tag {
+	callback_qlist_elem_ptr next;
+	callback_qlist_elem_ptr prev;
 
 	unsigned flags;
 	callback_fn fn;
 	void* param;
-}callback_qlist_elem_t;
+}callback_qlist_elem_tag;
 
-typedef struct callback_qlist_t** callback_qlist_h;
-typedef struct callback_qlist_t* callback_qlist_p;
-typedef struct callback_qlist_t {
-	callback_qlist_elem_p head;
-	callback_qlist_elem_p tail;
+typedef struct callback_qlist_tag** callback_qlist_hptr;
+typedef callback_qlist_hptr const callback_qlist_href;
+
+typedef struct callback_qlist_tag* callback_qlist_ptr;
+typedef callback_qlist_ptr const callback_qlist_ref;
+
+typedef struct callback_qlist_tag {
+	callback_qlist_elem_ptr head;
+	callback_qlist_elem_ptr tail;
 
 	unsigned int count;
 	unsigned int type;
@@ -45,16 +51,16 @@ typedef struct callback_qlist_t {
 
 /* **** */
 
-void callback_qlist_alloc_init(callback_qlist_h const cbl, unsigned int type);
-void callback_qlist_init(callback_qlist_p const cbl, unsigned int type);
-void callback_qlist_process(callback_qlist_p const cbl);
-void callback_qlist_process_singleton_list(callback_qlist_p const cbl);
-void callback_qlist_register_callback(callback_qlist_p const cbl,
-	callback_qlist_elem_p const cble);
+void callback_qlist_alloc_init(callback_qlist_href cbl, unsigned int type);
+void callback_qlist_init(callback_qlist_ref cbl, unsigned int type);
+void callback_qlist_process(callback_qlist_ref cbl);
+void callback_qlist_process_singleton_list(callback_qlist_ref cbl);
+void callback_qlist_register_callback(callback_qlist_ref cbl,
+	callback_qlist_elem_ptr const cble);
 
 /* **** */
 
-static inline void callback_qlist_setup_elem(callback_qlist_elem_p const cble,
+static inline void callback_qlist_setup_elem(callback_qlist_elem_ref cble,
 	callback_fn const fn, void *const param)
 {
 	ERR_NULL(cble);
@@ -67,8 +73,8 @@ static inline void callback_qlist_setup_elem(callback_qlist_elem_p const cble,
 	cble->prev = 0;
 }
 
-static inline void callback_qlist_setup_and_register_callback(callback_qlist_p cbl,
-	callback_qlist_elem_p const cble, callback_fn const fn, void *const param)
+static inline void callback_qlist_setup_and_register_callback(callback_qlist_ref cbl,
+	callback_qlist_elem_ref cble, callback_fn const fn, void *const param)
 {
 	ERR_NULL(cbl);
 	ERR_NULL(cble);
