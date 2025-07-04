@@ -1,22 +1,14 @@
-CFLAGS += -O2
-CFLAGS += -fPIC
+export CFLAGS += -O2
 
-LDFLAGS += -shared
+export SRC_DIR = source
 
-SRC_DIR = source
-SRCS = $(wildcard $(SRC_DIR)/*.c)
+export TARGET = libbse
 
-TARGET_LIB = libbse
-TARGET_LIB_A = $(TARGET_LIB).a
-TARGET_LIB_SO = $(TARGET_LIB).so
+include makefiles/common_setup.mk
 
 .PHONY: all
-all: $(TARGET_LIB_SO)
+all:
+	$(MAKE) -f makefiles/build_liba.mk all
+	$(MAKE) -f makefiles/build_libso.mk all
 
-include makefile.setup
-
-$(OBJ_TARGET_LIB_SO): $(OBJ_TARGET_LIB_A)
-
-$(TARGET_LIB_SO): $(TARGET_LIB_A)
-
-include makefile.build
+include makefiles/common.mk
