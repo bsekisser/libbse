@@ -11,7 +11,7 @@
 #define _BF(_bits)								_LSL(~0U, _bits)
 #define _BM(_bits)								(~_BF(_bits))
 #define _BV(_bit)								_LSL(1U, _bit)
-#define _BVR(_bit)								_LSL_MASKED(1U, ~_bit)
+#define _BVR(_bit)								_LSL_MASKED(1U, ~(_bit))
 
 #define _LSL(_data, _bits)						((_data) << (_bits))
 #define _LSL_MASKED(_data, _bits)				_LSL(_data, (_bits) & (typeof(_bits))__SIZEOF_DATA_BITS_MASK(_data))
@@ -22,7 +22,7 @@
 /* singular bit operations */
 
 #define __BCLR(_data, _bit) 					(_data & ~_BV(_bit))
-#define __BCLRR(_data, _bit) 					(_data & ~_BVR(~_bit))
+#define __BCLRR(_data, _bit) 					(_data & ~_BVR(~(_bit)))
 
 static inline
 unsigned _bitop_bclr(const unsigned data, const unsigned bit)
@@ -44,7 +44,7 @@ unsigned _bitop_bclrr(const unsigned data, const unsigned bit)
 #define BCLRR(_data, _bit)						(_data = (typeof(_data))_BCLRR(_data, _bit))
 
 #define __BEXT(_data, _bit)						(_LSR(_data, _bit) & 1U)
-#define __BEXTR(_data, _bit)					(_LSR_MASKED(_data, ~_bit)  & 1U)
+#define __BEXTR(_data, _bit)					(_LSR_MASKED(_data, ~(_bit))  & 1U)
 
 static inline
 unsigned _bitop_bext(const unsigned data, const unsigned bit)
@@ -84,8 +84,10 @@ unsigned _bitop_bsetr(const unsigned data, const unsigned bit)
 #define BSET(_data, _bit)						(_data = (typeof(_data))_BSET(_data, _bit))
 #define BSETR(_data, _bit)						(_data = (typeof(_data))_BSETR(_data, _bit))
 
-#define __BSET_AS(_data, _bit, _set)			(_data | (typeof(_data))_LSL(!!((unsigned)(_set)), _bit))
-#define __BSETR_AS(_data, _bit, _set)			(_data | (typeof(_data))_LSL_MASKED(!!((unsigned)(_set)), ~_bit))
+//#define __BSET_AS(_data, _bit, _set)                   (_data | (typeof(_data))_LSL(!!((unsigned)(_set)), _bit))
+#define __BSET_AS(_data, _bit, _set)			(_data | _LSL(!!(_set), _bit))
+//#define __BSETR_AS(_data, _bit, _set)                  (_data | (typeof(_data))_LSL_MASKED(!!((unsigned)(_set)), ~_bit))
+#define __BSETR_AS(_data, _bit, _set)			(_data | _LSL_MASKED(!!(_set), ~(_bit)))
 
 static inline
 unsigned _bitop_bset_as(const unsigned data, const unsigned bit, const unsigned set)
