@@ -1,8 +1,8 @@
 # setup
 
-OBJ_TARGET_EXE = $(OBJ_DIR)/$(TARGET_EXE)
+OBJ_TARGET_EXE = $(OBJ_DIR)/$(TARGET)
 
-TARGET_EXE = $(TARGET)
+TARGET_EXE = $(TARGET).exe
 
 include git/libbse/makefiles/common_setup.mk
 
@@ -15,7 +15,7 @@ all: $(TARGET_EXE) $(DUMP_MACHINE)
 clean_all: clean_exe
 
 $(TARGET_EXE): $(OBJ_TARGET_EXE) | $(OBJ_DIR)
-	@[ -L $@ ] || $(LN) $(LNFLAGS) $<
+	[ -L $@ ] || $(LN) $(LNFLAGS) $< $@
 
 $(OBJ_TARGET_EXE): $(OBJS) | $(OBJ_DIR)
 

@@ -14,6 +14,9 @@
 #$(info >> target_marc: $(TARGET_MACH))
 #$(info >> vpath: $(VPATH))
 
+.o.exe:
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+
 $(OBJS_C): $(OBJ_DIR)/%.o : %.c | $(OBJ_DIR)
 	$(COMPILE.c) $(OUTPUT_OPTION) $<
 
@@ -31,6 +34,11 @@ $(DUMP_MACHINE): $(BUILD_DIR)
 $(OBJ_DIR):
 	@[ -d $@ ] || mkdir -p $@
 
+
+$(OBJ_TARGET): $(OBJS) | $(OBJ_DIR)
+
+$(TARGET): $(OBJ_TARGET) | $(OBJ_DIR)
+	[ -L $@ ] || $(LN) $(LNFLAGS) $< $@
 
 -include $(DEPS)
 -include $(DEPS_CPP)
