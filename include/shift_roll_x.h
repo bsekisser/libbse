@@ -77,7 +77,7 @@ typedef shift_type_ut const shift_type_utref;
 
 #define __SHIFT_VCu(_lname) \
 	__STATIC__ __INLINE__ \
-	shift_type_utref __PASTE(_lname, _vc)(shift_type_utref v, unsigned sa, unsigned *const carry_out) \
+	shift_type_ut __PASTE(_lname, _vc)(shift_type_utref v, unsigned sa, unsigned *const carry_out) \
 	{ return(__SHIFT_VC(carry_out, _lname, v, sa)); }
 
 #define __SHIFTs(_lname, _action) \
@@ -128,8 +128,8 @@ __SHIFT_VCu(ROR)
 
 /* **** */
 
-unsigned RRX(_c)(shift_type_utref v, unsigned *const carry_out);
-shift_type_ut RRX(_v)(shift_type_utref v, const unsigned carry_in);
+__STATIC__ __INLINE__ unsigned RRX(_c)(shift_type_utref v, unsigned *const carry_out);
+__STATIC__ __INLINE__ shift_type_ut RRX(_v)(shift_type_utref v, const unsigned carry_in);
 
 __STATIC__ __INLINE__
 shift_type_ut RRX()(shift_type_utref v, const unsigned carry_in, unsigned *const carry_out)
