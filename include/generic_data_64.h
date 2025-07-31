@@ -1,0 +1,35 @@
+typedef union generic64_data_tag* generic64_data_ptr;
+typedef generic64_data_ptr const generic64_data_ref;
+
+typedef union generic64_data_tag {
+	char c;
+	double d;
+	float f;
+	int i;
+	int16_t i16;
+	int32_t i32;
+	int64_t i64;
+	int8_t i8;
+	long l;
+	long long ll;
+	void *p;
+	int16_t* p2i16;
+	uint16_t* p2u16;
+	int32_t* p2i32;
+	uint32_t* p2u32;
+	int64_t* p2i64;
+	uint64_t* p2u64;
+	int8_t* p2i8;
+	uint8_t* p2u8;
+	short s;
+	signed st;
+	uint16_t u16;
+	uint32_t u32;
+	int64_t u64;
+	uint8_t u8;
+	unsigned char uc;
+	unsigned long ul;
+	unsigned long long ull;
+	unsigned short us;
+	unsigned ut;
+}generic64_data_t;
