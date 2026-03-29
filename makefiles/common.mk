@@ -1,30 +1,45 @@
-#$(info obj_dir: $(OBJ_DIR))
+# setup
+
+export TOP_DIR = $(PWD)
+
+# recipies
+
+
+.PHONY:all
+all: $(addprefix all-, $(TARGETs))
+
+.PHONY: all-%
+all-%:
+	$(MAKE) -f git/makefiles/common_build.mk all TARGET=$*
 
 
 .PHONY: clean
-clean:
-	-rm -rf $(OBJ_DIR)
+clean: $(addprefix clean-, $(TARGETs))
+
+.PHONY: clean-%
+clean-%:
+	$(MAKE) -f git/makefiles/common_clean.mk clean TARGET=$*
+
 
 .PHONY: clean_all
-clean_all: clean clean_libs clean_logs
-	-rm -rf $(BUILD_DIR)
+clean_all: $(addprefix clean_all-, $(TARGETs))
 
-.PHONY: clean_exe
-clean_exe:
-	-rm $(TARGET_EXE)
+.PHONY: clean_all-%
+clean_all-%:
+	$(MAKE) -f git/makefiles/common_clean.mk clean_all TARGET=$*
 
-.PHONY: clean_liba
-clean_liba:
-	-rm $(TARGET_LIB_A)
 
-.PHONY: clean_libs
-clean_libs:
-	-rm *.a *.so
+lib%:
+	$(MAKE) -f git/makefiles/common_build.mk $@ TARGET=$@
 
-.PHONY: clean_libso
-clean_libso:
-	-rm $(TARGET_LIB_SO)
 
-.PHONY: clean_logs
-clean_logs:
-	-rm *.debug *.log *.trace
+.PHONY: mostlyclean
+mostlyclean: $(addprefix mostlyclean-, $(TARGETs))
+
+.PHONY: mostlyclean-%
+mostlyclean-%:
+	$(MAKE) -f git/makefiles/common_clean.mk mostlyclean TARGET=$*
+
+
+%.exe:
+	$(MAKE) -f git/makefiles/build_exe.mk all TARGET=$@
