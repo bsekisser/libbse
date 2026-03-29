@@ -130,7 +130,7 @@ unsigned __alubox_fu_s_and(alubox_ref alu, const unsigned s1, const unsigned s2)
 static inline
 unsigned __alubox_fu_s_asr(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
-	int carry_out = 0;
+	unsigned carry_out = 0;
 	const unsigned result = _asr_vc(s1, s2, &carry_out);
 
 	if(alu && alu->flags.s)
