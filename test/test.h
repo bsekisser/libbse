@@ -5,6 +5,7 @@ typedef struct test_result_tag {
 	unsigned failed;
 }test_results_t;
 
+extern const char* pass_failed[2];
 extern test_results_t test_results;
 
 #define TEST(_expect, _test, _action) \
@@ -16,7 +17,7 @@ extern test_results_t test_results;
 		test_results.passed += !!passed; \
 		test_results.failed += !!failed; \
 		\
-		LOG_START("[ %s ] -- ", failed ? " FAIL " : " PASS " ); \
-		LOG_END("0x%016" PRIx64 " " #_test " (0x%016" PRIx64 " <-- " #_action ")", \
+		printf("[ %s ] -- ", pass_failed[failed]); \
+		printf("0x%016" PRIx64 " " #_test " (0x%016" PRIx64 " <-- " #_action ")\n", \
 			(int64_t)__expect, (int64_t)__result); \
 	})

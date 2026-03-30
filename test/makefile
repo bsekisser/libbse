@@ -14,6 +14,7 @@ OBJS = \
 
 # individual tests
 TESTS = test.o \
+	mem_access_test.o \
 	shift_roll_test_32.o \
 	shift_roll_test_64.o
 
@@ -21,7 +22,7 @@ TESTS = test.o \
 all: $(OBJS) test
 
 clean:
-	-rm $(OBJS) $(TEST) *.d test
+	-rm $(OBJS) $(TESTS) *.d test
 
 test: test.o $(TESTS)
 

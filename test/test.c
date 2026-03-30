@@ -1,6 +1,7 @@
 #include "log.h"
 #include "test.h"
 
+const char* pass_failed[2] = { " PASS ", "FAILED" };
 test_results_t test_results;
 
 int main(void)
