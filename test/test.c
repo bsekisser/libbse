@@ -6,6 +6,9 @@ test_results_t test_results;
 
 int main(void)
 {
-	LOG("tests.(failed: 0x%08x, passed: 0x%08x)",
-		test_results.failed, test_results.passed);
+	LOG("tests.(failed: 0x%08x, passed: 0x%08x)%s",
+		test_results.failed, test_results.passed,
+		(test_results.passed && (0 == test_results.failed)) ?
+			" -- all tests passed" : ""
+		);
 }
