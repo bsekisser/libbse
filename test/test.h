@@ -10,8 +10,8 @@ extern test_results_t test_results;
 
 #define TEST(_expect, _test, _action) \
 	({ \
-		const typeof(_action) __expect = (typeof(_action))_expect; \
-		const typeof(_action) __result = (typeof(_action))_action; \
+		const typeof(_action) __expect = (typeof(_action))(_expect); \
+		const typeof(_action) __result = (typeof(_action))(_action); \
 		\
 		const unsigned passed = (__expect _test __result), failed = !passed; \
 		test_results.passed += !!passed; \
