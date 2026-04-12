@@ -5,9 +5,12 @@
 #endif
 
 #include "bitfield.h"
+#include "bitops32.h"
+#include "bitops64.h"
+//#include "bitops.h" -- TODO: remove, depreciated
 #include "bounds.h"
 #include "bswap.h"
-//#include "callback_list.h"
+#include "callback_list.h"
 #include "cast.h"
 #include "dtime.h"
 #include "err_test.h"
@@ -24,6 +27,6 @@
 //#include "trace.h"
 #include "unused.h"
 
-//#include "callback_list.c"
-//#include "dtime.c"
+#include "../source/callback_list.c"
+#include "../source/dtime.c"
 #include "shift_roll.c"

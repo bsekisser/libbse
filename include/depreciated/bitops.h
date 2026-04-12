@@ -3,7 +3,7 @@
 /* **** */
 
 #ifndef __BITOP_EXCEPTION
-	#warning depriciated, use type-safe bit operations.
+	#error depriciated, use type-safe bit operations.
 #endif
 
 #include "shift_roll_macros.h"

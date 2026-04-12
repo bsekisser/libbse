@@ -2,7 +2,6 @@
 
 /* **** */
 
-#include "bitop_macros.h"
 #include "shift_roll_macros.h"
 
 /* **** */

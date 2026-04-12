@@ -2,7 +2,7 @@
 
 /* **** */
 
-#include "bitops.h"
+#include "shift_roll_macros.h"
 
 /* pos-bits bitfield helper operations */
 

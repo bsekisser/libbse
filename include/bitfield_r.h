@@ -2,7 +2,6 @@
 
 /* **** */
 
-#include "bitops.h"
 #include "bitfield_pb.h"
 
 /* lsb-to-msb bitfield operations */

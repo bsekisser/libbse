@@ -2,7 +2,6 @@
 
 /* **** */
 
-#include "bitops.h"
 #include "bitfield_pb.h"
 
 /* **** */

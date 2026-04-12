@@ -3,6 +3,7 @@
 /* **** */
 
 #include "bitfield.h"
+#include "bitop_macros.h"
 #include "log.h"
 
 /* **** */
@@ -50,11 +51,11 @@ void test_bitfield(void)
 	TRACE_ASSERT(0xffffffff, ==, _BMAS(-1, 7, 5));
 	TRACE_ASSERT(0xffffff7f, ==, _BMAS(-1, 7, 0));
 
-	TRACE_ASSERT(0x00000020, ==, BMOV(0x80, 7, 5));
-	TRACE_ASSERT(0x00000080, ==, BMOV(0x20, 5, 7));
+	TRACE_ASSERT(0x00000020, ==, _BMOV(0x80, 7, 5));
+	TRACE_ASSERT(0x00000080, ==, _BMOV(0x20, 5, 7));
 
 	TRACE_ASSERT(0xA0, ==, _BSET(0x80, 5));
-	TRACE_ASSERT(0x20, ==, BTST(0xa0, 5));
+	TRACE_ASSERT(0x20, ==, _BTST(0xa0, 5));
 
 	/* test bitfield operations */
 

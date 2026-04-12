@@ -2,7 +2,7 @@
 
 /* **** */
 
-#include "bitfield.h"
+#include "bitop_macros.h"
 #include "shift_roll_macros.h"
 #include "unused.h"
 
@@ -57,7 +57,7 @@ unsigned __alubox_fu_bclr(const unsigned acc, const unsigned s1, const unsigned 
 UNUSED_FN __ALUBOX_STATIC__ __ALUBOX_INLINE__
 unsigned __alubox_fu_bext(const unsigned acc, const unsigned s1, const unsigned s2, const unsigned carry_in)
 {
-	return(BEXT(s1, s2));
+	return(_BEXT(s1, s2));
 	UNUSED(acc, carry_in);
 }
 
@@ -77,7 +77,7 @@ unsigned __alubox_fu_bset(const unsigned acc, const unsigned s1, const unsigned 
 UNUSED_FN __ALUBOX_STATIC__ __ALUBOX_INLINE__
 unsigned __alubox_fu_btst(const unsigned acc, const unsigned s1, const unsigned s2, const unsigned carry_in)
 {
-	return(BTST(s1, s2));
+	return(_BTST(s1, s2));
 	UNUSED(acc, carry_in);
 }
 

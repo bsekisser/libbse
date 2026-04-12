@@ -1,0 +1,19 @@
+#!/usr/bin/sh
+
+grep -r 'BCLR'
+
+grep -r 'BEXT'
+
+grep -r 'BMAS'
+
+grep -r 'BMOV'
+
+grep -r 'BSET'
+
+grep -r 'BSET_AS'
+
+grep -r 'BTST'
+
+grep -r 'BXMI'
+
+grep -r 'BXOR'

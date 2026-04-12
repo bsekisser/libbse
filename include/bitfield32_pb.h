@@ -3,7 +3,6 @@
 /* **** */
 
 #include "bitfield_macros.h"
-#include "bitops32.h"
 #include "shift_roll_macros.h"
 
 /* **** */

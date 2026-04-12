@@ -6,7 +6,6 @@
 
 /* **** */
 
-#include "bitfield.h"
 #include "shift_roll_macros.h"
 
 /* **** */
@@ -14,8 +13,6 @@
 #include <stdlib.h>
 
 /* **** */
-
-#define __unsigned_bits ((sizeof(unsigned) << 3) - 1)
 
 typedef struct alubox_psr_tag* alubox_psr_ptr;
 typedef alubox_psr_ptr const alubox_psr_ref;
@@ -26,7 +23,6 @@ typedef struct alubox_psr_tag {
 		struct {
 			unsigned c:1;
 			unsigned n:1;
-			unsigned s:1;
 			unsigned v:1;
 			unsigned z:1;
 		};
@@ -51,12 +47,12 @@ typedef struct alubox_tag {
 /* **** */
 
 __ALUBOX_STATIC__ __ALUBOX_INLINE__
-unsigned __alubox_fu__flags_nz(alubox_ref alu, const unsigned result)
+unsigned __alubox_fu__flags_nz(alubox_ref alu, const signed result)
 {
 	if(alu && alu->flags.s) {
 		alu->result = result;
 
-		alu->psr.n = BEXT(result, __unsigned_bits);
+		alu->psr.n = (0 > result);
 		alu->psr.z = (0 == result);
 	}
 
@@ -85,26 +81,29 @@ void __alubox_fu__flags_s_wb(alubox_ref alu, const unsigned s, const unsigned wb
  */
 
 __ALUBOX_STATIC__ __ALUBOX_INLINE__
-unsigned __alubox_fu__flags_add(alubox_ref alu, const unsigned s1, const unsigned s2)
+unsigned __alubox_fu__flags_add_sub(alubox_ref alu, const unsigned s1, const unsigned s2, const unsigned add)
 {
 	const unsigned result = s1 + s2;
 
 	if(alu && alu->flags.s) {
-		const unsigned xvec = (s1 ^ s2);
-		const unsigned ovec = (s1 ^ result) & ~xvec;
+		const signed xvec = (s1 ^ s2);
+		const signed ovec = (s1 ^ result) & (add ? ~xvec : xvec);
+		const signed cvec = (xvec ^ ovec ^ result);
 
-		alu->psr.c = BEXT((xvec ^ ovec ^ result), __unsigned_bits);
-		alu->psr.v = BEXT(ovec, __unsigned_bits);
+		alu->psr.c = (0 > cvec);
+		alu->psr.v = (0 > ovec);
 	}
 
 	return(__alubox_fu__flags_nz(alu, result));
 }
 
 __ALUBOX_STATIC__ __ALUBOX_INLINE__
+unsigned __alubox_fu__flags_add(alubox_ref alu, const unsigned s1, const unsigned s2)
+{ return(__alubox_fu__flags_add_sub(alu, s1, s2, 1)); }
+
+__ALUBOX_STATIC__ __ALUBOX_INLINE__
 unsigned __alubox_fu__flags_sub(alubox_ref alu, const unsigned s1, const unsigned s2)
-{
-	return(__alubox_fu__flags_add(alu, s1, -s2));
-}
+{ return(__alubox_fu__flags_add_sub(alu, s1, -s2, 0)); }
 
 /* **** */
 

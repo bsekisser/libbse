@@ -4,7 +4,7 @@
 
 #include <unistd.h>
 
-#include "bitops.h"
+#include "bitop_macros.h"
 
 /* **** */
 
@@ -25,7 +25,7 @@ void _clear(spin_ref lock, const char bit) {
 
 static inline
 int _check(spin_ref lock, const char bit) {
-	return(BTST(*lock, bit));
+	return(_BTST(*lock, bit));
 }
 
 static inline

@@ -1,11 +1,8 @@
 #pragma once
 
-#include "bitops.h"
-
-/* singular bit operations */
-
-
 /* **** */
+
+#include "shift_roll_macros.h"
 
 /* helper bitfield operations */
 
