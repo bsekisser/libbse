@@ -8,8 +8,6 @@
 #define _ASR(_data, _bits)						((typeof(_data))_LSR((signed)_data, _bits))
 #define _ASR_MASKED(_data, _bits)				((typeof(_data))_LSR_MASKED((signed)_data, _bits))
 
-#define _BF(_bits)								_LSL(~0U, _bits)
-#define _BM(_bits)								(~_BF(_bits))
 #define _BV(_bit)								_LSL(1U, _bit)
 #define _BVR(_bit)								_LSL_MASKED(1U, ~(_bit))
 

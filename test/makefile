@@ -16,7 +16,8 @@ OBJS = \
 TESTS = test.o \
 	mem_access_test.o \
 	shift_roll_test_32.o \
-	shift_roll_test_64.o
+	shift_roll_test_64.o \
+	test_bitfield.o
 
 all: $(OBJS) test
 
