@@ -54,7 +54,7 @@ void test_asr32_vc(void)
 }
 
 static __attribute__((constructor))
-void test_lsl(void)
+void test_lsl32(void)
 {
 	TEST(0x00000001, ==, lsl32(0x00000001, 0));
 	TEST(0x00000002, ==, lsl32(0x00000001, 1));
@@ -81,7 +81,7 @@ void test_lsl(void)
 }
 
 static __attribute__((constructor))
-void test_lsl_vc(void)
+void test_lsl32_vc(void)
 {
 	unsigned out_c = 0;
 

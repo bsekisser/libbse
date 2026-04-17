@@ -7,7 +7,7 @@
 /* **** */
 
 #include "bitfield.h"
-#include "shift_roll.h"
+#include "shift_roll_macros.h"
 
 /* **** */
 
@@ -129,15 +129,12 @@ unsigned __alubox_fu_s_and(alubox_ref alu, const unsigned s1, const unsigned s2)
 }
 
 __ALUBOX_STATIC__ __ALUBOX_INLINE__
-unsigned __alubox_fu_s_asr(alubox_ref alu, const unsigned s1, const unsigned s2)
+unsigned __alubox_fu_s_asr(alubox_ref alu, const signed s1, const unsigned s2)
 {
-	unsigned carry_out = 0;
-	const unsigned result = _asr_vc(s1, s2, &carry_out);
-
 	if(alu && alu->flags.s)
-		alu->psr.c = (0 != carry_out);
+		alu->psr.c = _ASR_C(s1, s2);
 
-	return(__alubox_fu__flags_nz(alu, result));
+	return(__alubox_fu__flags_nz(alu, __alubox_fu_asr(0, s1, s2, 0)));
 }
 
 __ALUBOX_STATIC__ __ALUBOX_INLINE__
@@ -185,25 +182,19 @@ unsigned __alubox_fu_s_eor(alubox_ref alu, const unsigned s1, const unsigned s2)
 __ALUBOX_STATIC__ __ALUBOX_INLINE__
 unsigned __alubox_fu_s_lsl(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
-	unsigned carry_out = 0;
-	const unsigned result = _lsl_vc(s1, s2, &carry_out);
-
 	if(alu && alu->flags.s)
-		alu->psr.c = (0 != carry_out);
+		alu->psr.c = _LSL_C(s1, s2);
 
-	return(__alubox_fu__flags_nz(alu, result));
+	return(__alubox_fu__flags_nz(alu, __alubox_fu_lsl(0, s1, s2, 0)));
 }
 
 __ALUBOX_STATIC__ __ALUBOX_INLINE__
 unsigned __alubox_fu_s_lsr(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
-	unsigned carry_out = 0;
-	const unsigned result = _lsr_vc(s1, s2, &carry_out);
-
 	if(alu && alu->flags.s)
-		alu->psr.c = (0 != carry_out);
+		alu->psr.c = _LSR_C(s1, s2);
 
-	return(__alubox_fu__flags_nz(alu, result));
+	return(__alubox_fu__flags_nz(alu, __alubox_fu_lsr(0, s1, s2, 0)));
 }
 
 __ALUBOX_STATIC__ __ALUBOX_INLINE__
@@ -246,6 +237,9 @@ unsigned __alubox_fu_s_orr(alubox_ref alu, const unsigned s1, const unsigned s2)
 __ALUBOX_STATIC__ __ALUBOX_INLINE__
 unsigned __alubox_fu_s_ror(alubox_ref alu, const unsigned s1, const unsigned s2)
 {
+	if(alu && alu->flags.s)
+		alu->psr.c = _ROR_C(s1, s2);
+
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_ror(0, s1, s2, 0)));
 }
 
@@ -255,7 +249,7 @@ unsigned __alubox_fu_s_rrx(alubox_ref alu, const unsigned s1, const unsigned s2)
 	const unsigned carry_in = alu ? alu->psr.c : 0;
 
 	if(alu && alu->flags.s)
-		alu->psr.c = s1 & 1;
+		return(_RRX(s1, carry_in, alu->psr.c));
 
 	return(__alubox_fu__flags_nz(alu, __alubox_fu_rrx(0, s1, s2, carry_in)));
 }

@@ -2,21 +2,15 @@
 
 /* **** */
 
-#include <stdint.h>
+#undef __SHIFT_TYPE_SIGNED
+#define __SHIFT_TYPE_SIGNED signed
+
+#undef __SHIFT_TYPE_UNSIGNED
+#define __SHIFT_TYPE_UNSIGNED unsigned
+
+#undef __SHIFT_BITSv
+#define __SHIFT_BITSv
 
 /* **** */
 
-typedef signed shift_type_st;
-typedef unsigned shift_type_ut;
-
-#define __SHIFT_BITSv
-
-#define asr _asr
-#define lsl _lsl
-#define lsr _lsr
-#define rol _rol
-#define ror _ror
-#define _rrx_c(_v) rrx_c(_v, 0)
-#define _rrx_v(_v, _co) rrx_v(_v, _co)
-
-#include "shift_roll_x.h"
+#include "shift_roll_functions.h"

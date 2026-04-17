@@ -8,16 +8,18 @@ CFLAGS += -I../include
 OBJS = \
 	alubox_switch_case.o \
 	shift_roll_32.o \
+	shift_roll_64.o \
 	shift_roll_l.o \
+	shift_roll.o \
 	test_headers.o \
 	test.o
 
 # individual tests
 TESTS = test.o \
 	mem_access_test.o \
-	shift_roll_test_32.o \
-	shift_roll_test_64.o \
-	test_bitfield.o
+	test_bitfield.o \
+	test_shift_roll_32.o \
+	test_shift_roll_64.o
 
 all: $(OBJS) test
 

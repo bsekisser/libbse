@@ -17,6 +17,8 @@
 //#include "on_err.h"
 #include "page.h"
 #include "queue.h"
+#include "shift_roll_32.h"
+#include "shift_roll_64.h"
 #include "shift_roll.h"
 #include "spinlock.h"
 //#include "trace.h"
@@ -24,3 +26,4 @@
 
 //#include "callback_list.c"
 //#include "dtime.c"
+#include "shift_roll.c"

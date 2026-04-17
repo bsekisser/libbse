@@ -2,13 +2,15 @@
 
 /* **** */
 
-#include <stdint.h>
+#undef __SHIFT_TYPE_SIGNED
+#define __SHIFT_TYPE_SIGNED long
+
+#undef __SHIFT_TYPE_UNSIGNED
+#define __SHIFT_TYPE_UNSIGNED unsigned long
+
+#undef __SHIFT_BITSv
+#define __SHIFT_BITSv l
 
 /* **** */
 
-typedef long shift_type_st;
-typedef unsigned long shift_type_ut;
-
-#define __SHIFT_BITSv
-
-#include "shift_roll_x.h"
+#include "shift_roll_functions.h"

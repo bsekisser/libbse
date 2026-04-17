@@ -54,7 +54,7 @@ void test_asr64_vc(void)
 }
 
 static __attribute__((constructor))
-void test_lsl(void)
+void test_lsl64(void)
 {
 	TEST(0x0000000000000001, ==, lsl64(0x0000000000000001, 0));
 	TEST(0x0000000000000002, ==, lsl64(0x0000000000000001, 1));
@@ -92,7 +92,7 @@ void test_lsl(void)
 }
 
 static __attribute__((constructor))
-void test_lsl_vc(void)
+void test_lsl64_vc(void)
 {
 	unsigned out_c = 0;
 

@@ -2,20 +2,14 @@
 
 /* **** */
 
-#define __SIZEOF_DATA_BITS(_data) (sizeof(_data) << 3)
-#define __SIZEOF_DATA_BITS_MASK(_data) (__SIZEOF_DATA_BITS(_data) - 1)
+#ifndef __BITOP_EXCEPTION
+	#warning depriciated, use type-safe bit operations.
+#endif
 
-#define _ASR(_data, _bits)						((typeof(_data))_LSR((signed)_data, _bits))
-#define _ASR_MASKED(_data, _bits)				((typeof(_data))_LSR_MASKED((signed)_data, _bits))
+#include "shift_roll_macros.h"
 
 #define _BV(_bit)								_LSL(1U, _bit)
 #define _BVR(_bit)								_LSL_MASKED(1U, ~(_bit))
-
-#define _LSL(_data, _bits)						((_data) << (_bits))
-#define _LSL_MASKED(_data, _bits)				_LSL(_data, (_bits) & (typeof(_bits))__SIZEOF_DATA_BITS_MASK(_data))
-
-#define _LSR(_data, _bits)						((_data) >> (_bits))
-#define _LSR_MASKED(_data, _bits)				_LSR(_data, (_bits) & (typeof(_bits))__SIZEOF_DATA_BITS_MASK(_data))
 
 /* singular bit operations */
 

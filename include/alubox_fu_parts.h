@@ -3,7 +3,7 @@
 /* **** */
 
 #include "bitfield.h"
-#include "shift_roll.h"
+#include "shift_roll_macros.h"
 #include "unused.h"
 
 /* **** */
@@ -41,9 +41,9 @@ unsigned __alubox_fu_and(const unsigned acc, const unsigned s1, const unsigned s
 }
 
 UNUSED_FN __ALUBOX_STATIC__ __ALUBOX_INLINE__
-unsigned __alubox_fu_asr(const unsigned acc, const unsigned s1, const unsigned s2, const unsigned carry_in)
+unsigned __alubox_fu_asr(const signed acc, const signed s1, const unsigned s2, const unsigned carry_in)
 {
-	return(_asr(s1, s2 & 0xff));
+	return(_ASR(s1, s2));
 	UNUSED(acc, carry_in);
 }
 
@@ -98,14 +98,14 @@ unsigned __alubox_fu_eor(const unsigned acc, const unsigned s1, const unsigned s
 UNUSED_FN __ALUBOX_STATIC__ __ALUBOX_INLINE__
 unsigned __alubox_fu_lsl(const unsigned acc, const unsigned s1, const unsigned s2, const unsigned carry_in)
 {
-	return(_lsl(s1, s2 & 0xff));
+	return(_LSL(s1, s2));
 	UNUSED(acc, carry_in);
 }
 
 UNUSED_FN __ALUBOX_STATIC__ __ALUBOX_INLINE__
 unsigned __alubox_fu_lsr(const unsigned acc, const unsigned s1, const unsigned s2, const unsigned carry_in)
 {
-	return(_lsr(s1, s2 & 0xff));
+	return(_LSR(s1, s2));
 	UNUSED(acc, carry_in);
 }
 
@@ -152,14 +152,14 @@ unsigned __alubox_fu_orr(const unsigned acc, const unsigned s1, const unsigned s
 UNUSED_FN __ALUBOX_STATIC__ __ALUBOX_INLINE__
 unsigned __alubox_fu_ror(const unsigned acc, const unsigned s1, const unsigned s2, const unsigned carry_in)
 {
-	return(_ror(s1, s2 & 0xff));
+	return(_ROR(s1, s2));
 	UNUSED(acc, carry_in);
 }
 
 UNUSED_FN __ALUBOX_STATIC__ __ALUBOX_INLINE__
 unsigned __alubox_fu_rrx(const unsigned acc, const unsigned s1, const unsigned s2, const unsigned carry_in)
 {
-	return(_lsr(s1, 1) | ((!!carry_in) << 31));
+	return(_RRX_V(s1, carry_in));
 	UNUSED(acc, s2);
 }
 
