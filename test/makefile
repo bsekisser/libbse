@@ -18,12 +18,15 @@ TESTS = test.o \
 	shift_roll_test_32.o \
 	shift_roll_test_64.o
 
-
 all: $(OBJS) test
 
 clean:
 	-rm $(OBJS) $(TESTS) *.d test
 
-test: test.o $(TESTS)
+test: test.o $(TESTS) | all
+
+.PHONY: test_test
+test_test: test
+	./test
 
 -include *.d
