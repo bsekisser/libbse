@@ -1,4 +1,7 @@
-#pragma once
+// NOTE, TODO: !!! #pragma once does not work here !!!
+
+#ifndef __BITOP_MACROS__
+#define __BITOP_MACROS__
 
 /* **** */
 
@@ -33,3 +36,5 @@
 #define BTST _BTST
 #define BXMI(_dst, _dst_bit, _src, _src_bit) ((_dst) = _BXMI(_dst, _dst_bit, _src, _src_bit))
 #define BXOR(_data, _bit) ((_data) = _BXOR(_data, _bit))
+
+#endif // __BITOP_MACROS__

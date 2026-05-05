@@ -1,3 +1,13 @@
+#ifndef __BITOP_MACROS__
+	#error !defined(__BITOP_MACROS__)
+#endif
+
+#undef __BITOP_MACROS__
+
+#ifndef __BITOPS_UNDEF__
+	#error __BITOPS_UNDEF__
+#else
+
 #undef _BCLR
 #undef _BEXT
 #undef _BMAS
@@ -23,3 +33,7 @@
 	#undef _BV_AS
 	#undef _BVM
 #endif
+
+#define __BITOPS__UNDEF__
+#endif // __BITOPS_UNDEF__
+#undef __BITOPS_UNDEF__

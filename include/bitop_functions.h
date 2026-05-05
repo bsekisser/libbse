@@ -85,4 +85,5 @@ __BITOP_FN(bxor) { return(_BXOR(v, bit)); }
 __BITOPp_FN(bxor) { return(BXOR(*v, bit)); }
 __BITOPpp_FN(bxor) { return(__BITOPp(bxor)(v, bit)); }
 
+#define __BITOPS_UNDEF__
 #include "bitops_undef.h"
