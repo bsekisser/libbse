@@ -10,7 +10,7 @@
 /* **** helpers */
 
 #define _BV(_bit) _BV_AS(_bit, 1U)
-#define _BV_AS(_bit, _as) _LSL(!!(_as), _bit)
+#define _BV_AS(_bit, _as) _LSL((unsigned)!!(_as), _bit)
 #define _BVM(_bit) (~_BV(_bit))
 
 /* **** base bit operation macros */
