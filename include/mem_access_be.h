@@ -15,7 +15,7 @@
 
 /* **** */
 
-static inline
+static inline __attribute__((warn_unused_result))
 unsigned mem_0x0be__access_read(void *const p2src, const size_t size) {
 	__test_assert_size(sizeof(unsigned) <= size);
 
@@ -58,7 +58,8 @@ unsigned mem_16be_access(void *const p2pat, unsigned *const write) {
 	return(data);
 }
 
-static unsigned mem_32be_access(void *const p2pat, unsigned *const write) {
+static inline
+unsigned mem_32be_access(void *const p2pat, unsigned *const write) {
 	const unsigned data = write ? *write : htobe32(*(uint32_t*)p2pat);
 
 	if(write)

@@ -15,7 +15,7 @@ typedef struct trace_tag {
 	TRACE_T_TRACE(TRACE_T(), _f, ##__VA_ARGS__); \
     }
 
-static
+static __attribute__((warn_unused_result))
 trace_ptr _trace_enter(trace_ref trace, const char *const file, const char *const function, const int line)
 {
     trace->file = (char*)file;

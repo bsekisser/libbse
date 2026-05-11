@@ -21,7 +21,7 @@
 
 /* **** */
 
-static inline
+static inline __attribute__((warn_unused_result))
 void* _handle_calloc(void *const h0, void* *const p0)
 {
 	STDERR_NULL(p0);
@@ -40,7 +40,7 @@ void* _handle_calloc(void *const h0, void* *const p0)
 	return(p);
 }
 
-static inline
+static inline __attribute__((warn_unused_result))
 void* handle_calloc(void *const h0, const size_t nmemb, const size_t size)
 {
 	void* *const p0 = (void**)calloc(nmemb, sizeof(void*) + (nmemb * size));
@@ -48,7 +48,7 @@ void* handle_calloc(void *const h0, const size_t nmemb, const size_t size)
 	return(_handle_calloc(h0, p0));
 }
 
-static inline
+static inline __attribute__((warn_unused_result))
 void* handle_malloc(void *const h0, const size_t size)
 {
 	void* *const p0 = (void**)malloc(sizeof(void*) + size);

@@ -1,6 +1,6 @@
 #pragma once
 
-static
+static __attribute__((warn_unused_result))
 int64_t sub64(const uint64_t s1, const uint64_t s2) {
 	const uint64_t abs_diff = (s1 > s2) ? (s1 - s2) : (s2 - s1);
 

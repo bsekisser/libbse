@@ -12,14 +12,14 @@
 
 /* **** */
 
-extern inline
+extern inline __attribute__((warn_unused_result))
 int abs(int v)
 { return(v ^ (v >> __BM(v))); }
 
-extern inline
+extern inline __attribute__((warn_unused_result))
 long labs(long v)
 { return(v ^ (v >> __BM(v))); }
 
-extern inline
+extern inline __attribute__((warn_unused_result))
 long long llabs(long long v)
 { return(v ^ (v >> __BM(v))); }

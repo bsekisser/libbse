@@ -1,6 +1,6 @@
 #pragma once
 
-static inline
+static inline __attribute__((warn_unused_result))
 unsigned _in_bounds(const unsigned check, const unsigned size, const unsigned min, const unsigned max)
 {
 	return((check >= min) && (check <= (max - size)));

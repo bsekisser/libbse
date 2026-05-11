@@ -26,10 +26,10 @@ void* ldst_ia(void* *const p, const size_t size)
 
 /* **** */
 
-static inline
+static inline __attribute__((warn_unused_result))
 uint16_t uint16le(void* *const p, ldst_stdint_fn fn)
 { return(le16toh(*(uint16_t*)_ldst_ea(p, sizeof(uint16_t), fn))); }
 
-static inline
+static inline __attribute__((warn_unused_result))
 uint32_t uint32le(void* *const p, ldst_stdint_fn fn)
 { return(le32toh(*(uint32_t*)_ldst_ea(p, sizeof(uint32_t), fn))); }

@@ -9,13 +9,7 @@
 
 /* **** */
 
-#ifndef __INLINE__
-	#define __INLINE__ inline
-#endif
-
-#ifndef __STATIC__
-	#define __STATIC__ static
-#endif
+#include "static_inline.h"
 
 #ifndef KHz
 	#define KHz(hz) ((hz)*1000ULL)
@@ -28,7 +22,7 @@
 /* **** */
 
 #ifdef __intel__
-	__STATIC__ __INLINE__
+	__STATIC__ __INLINE__ __attribute__((warn_unused_result))
 	uint64_t get_dtime(void) {
 		uint32_t hi, lo;
 
@@ -45,7 +39,7 @@
 		return(((uint64_t)hi << 32) | (uint64_t)lo);
 	}
 #else
-	__STATIC__ __INLINE__
+	__STATIC__ __INLINE__ __attribute__((warn_unused_result))
 	uint64_t get_dtime(void) {
 		struct timespec ts;
 		if(0 > clock_gettime(CLOCK_MONOTONIC, &ts)) {
@@ -59,9 +53,10 @@
 	}
 #endif
 
+__attribute__((warn_unused_result))
 uint64_t dtime_calibrate(void);
 
-__STATIC__ __INLINE__
+__STATIC__ __INLINE__ __attribute__((warn_unused_result))
 uint64_t _get_dtime_elapsed(const uint64_t last) {
 	return(get_dtime() - last);
 }

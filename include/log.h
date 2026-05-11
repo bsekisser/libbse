@@ -45,8 +45,14 @@
 
 
 #define LOGp64(_x) LOG("%s: 0x%016" PRIxPTR, #_x, (uintptr_t)_x)
+#define _LOGp64(_x) ({ typeof(_x) __x = _x; LOGp64(__x); __x; })
 #define LOGu(_x) LOG("%s: %u", #_x, _x)
+#define _LOGu(_x) ({ typeof(_x) __x = _x; LOGu(__x); __x; })
 #define LOGx64(_x) LOG("%s: 0x%016" PRIx64, #_x, (uint64_t)_x)
+#define _LOGx64(_x) ({ typeof(_x) __x = _x; LOGx64(__x); __x; })
 #define LOGx32(_x) LOG("%s: 0x%08x", #_x, _x)
+#define _LOGx32(_x) ({ typeof(_x) __x = _x; LOGx32(__x); __x; })
 #define LOGzu(_x) LOG("%s: %zu", #_x, _x)
+#define _LOGzu(_x) ({ typeof(_x) __x = _x; LOGzu(__x); __x; })
 #define LOGzx32(_x) LOG("%s: 0x%08zx", #_x, _x)
+#define _LOGzx32(_x) ({ typeof(_x) __x = _x; LOGzx32(__x); __x; })

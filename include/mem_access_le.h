@@ -15,7 +15,7 @@
 
 /* **** */
 
-static inline
+static inline __attribute__((warn_unused_result))
 unsigned mem_0x0le__access_read(void *const p2src, const size_t size) {
 	__test_assert_size(sizeof(long) <= size);
 
@@ -60,7 +60,7 @@ unsigned mem_16le_access(void *const p2pat, const unsigned *const write) {
 	return(data);
 }
 
-static
+static inline
 unsigned mem_32le_access(void *const p2pat, const unsigned *const write) {
 	const long data = write ? *write : htole32(*(uint32_t*)p2pat);
 
