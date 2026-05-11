@@ -5,6 +5,8 @@ BUILD_SUBDIR = $(BUILD_DIR)$(TARGET_SUBDIR)
 
 CFLAGS += -g -Wall -Wextra
 CFLAGS += -MMD -MP
+CFLAGS += -Wunused-result
+CFLAGS += -Wunused-value
 CFLAGS += -L/home/$(USER)/.local/lib
 CFLAGS += $(INCLUDE)
 
