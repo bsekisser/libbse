@@ -32,9 +32,9 @@ int queue_dequeue(qelem_ref e, qelem_ref p2lhs, queue_ref q)
 	assert(q);
 
 	if(e == q->head)
-		(void)queue_pop_front(q);
+		queue_drop_front(q);
 	else if(e == q->tail)
-		(void)queue_pop_back(q, p2lhs);
+		queue_drop_back(q, p2lhs);
 	else {
 		qelem_ptr lhs = p2lhs;
 
@@ -71,6 +71,22 @@ qelem_ptr queue_dequeue_next(queue_ref q)
 		q->tail = next;
 
 	return(e);
+}
+
+void queue_drop_back(queue_ref q, qelem_ref p2lhs)
+{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-result"
+	queue_pop_back(q, p2lhs);
+#pragma GCC diagnostic pop
+}
+
+void queue_drop_front(queue_ref q)
+{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-result"
+	queue_pop_front(q);
+#pragma GCC diagnostic pop
 }
 
 void queue_enqueue(qelem_ref e, queue_ref q)
