@@ -6,6 +6,7 @@
 
 #define __SHIFT_BITS__(_v) (sizeof(_v) << 3)
 #define __SHIFT_MASK__(_v) (__SHIFT_BITS__(_v) - 1)
+#define __SHIFT_MASKED__(_v, _sa) ((_sa) & __SHIFT_MASK__(_v))
 
 /* **** */
 
@@ -31,22 +32,22 @@ void* __asr_generic(void *const v, const unsigned size, const unsigned sa)
 
 #define _ASR(_data, _bits) ({ typeof(_data) _data_out = _data; __asr_generic((void*)&_data_out, sizeof(_data), _bits); _data_out; })
 #define _ASR_C(_data, _bits) (_ASR(_data, (_bits) - 1) & 1U)
-#define _ASR_MASKED(_data, _bits) _ASR(_data, (_bits) & __SHIFT_MASK__(_data))
+#define _ASR_MASKED(_data, _bits) _ASR(_data, __SHIFT_MASKED__(_data, _bits))
 #define _ASR_VC(_data, _bits, _carry_out) ({ _carry_out = _ASR_C(_data, _bits); _ASR(_data, _bits); })
 
 #define _LSL(_data, _bits) ((_data) << (_bits))
 #define _LSL_C(_data, _bits) (_LSR(_data, __SHIFT_BITS__(_data) - (_bits)) & 1U)
-#define _LSL_MASKED(_data, _bits) _LSL(_data, (_bits) & __SHIFT_MASK__(_data))
+#define _LSL_MASKED(_data, _bits) _LSL(_data, __SHIFT_MASKED__(_data, _bits))
 #define _LSL_VC(_data, _bits, _carry_out) ({ _carry_out = _LSL_C(_data, _bits); _LSL(_data, _bits); })
 
 #define _LSR(_data, _bits) ((_data) >> (_bits))
 #define _LSR_C(_data, _bits) (_LSR(_data, (_bits) - 1) & 1U)
-#define _LSR_MASKED(_data, _bits) _LSR(_data, (_bits) & __SHIFT_MASK__(_data))
+#define _LSR_MASKED(_data, _bits) _LSR(_data, __SHIFT_MASKED__(_data, _bits))
 #define _LSR_VC(_data, _bits, _carry_out) ({ _carry_out = _LSR_C(_data, _bits); _LSR(_data, _bits); })
 
 #define _ROL(_data, _bits) (_LSL(_data, _bits) | _LSR_MASKED(_data, -(_bits)))
 #define _ROL_C(_data, _bits) _LSL_C(_data, _bits)
-#define _ROL_MASKED(_data, _bits) _ROL(_data, (_bits) & __SHIFT_MASK__(_data))
+#define _ROL_MASKED(_data, _bits) _ROL(_data, __SHIFT_MASKED__(_data, _bits))
 #define _ROL_VC(_data, _bits, _carry_out) ({ _carry_out = _ROL_C(_data, _bits); _ROL(_data, _bits); })
 
 #define _ROR(_data, _bits) ({ (_LSL_MASKED(_data, -(_bits)) | _LSR(_data, _bits)); })
