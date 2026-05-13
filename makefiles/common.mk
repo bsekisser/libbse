@@ -42,4 +42,4 @@ mostlyclean-%:
 
 
 %.exe:
-	$(MAKE) -f git/makefiles/build_exe.mk all TARGET=$@
+	$(MAKE) -f git/makefiles/common_build.mk all TARGET=$@
