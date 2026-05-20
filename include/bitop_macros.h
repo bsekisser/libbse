@@ -35,6 +35,7 @@
 #define BSET_AS(_data, _bit, _as) ((_data) = _BSET_AS(_data, _bit, _as))
 #define BTST _BTST
 #define BXMI(_dst, _dst_bit, _src, _src_bit) ((_dst) = _BXMI(_dst, _dst_bit, _src, _src_bit))
+#define BXCG(_data, _bit, _set) ({ typeof(_data) _out = _data; BMAS(_data, _bit, _set); _BEXT(_out, _bit); })
 #define BXOR(_data, _bit) ((_data) = _BXOR(_data, _bit))
 
 #endif // __BITOP_MACROS__
