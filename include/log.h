@@ -44,15 +44,28 @@
 	}
 
 
-#define LOGp64(_x) LOG("%s: 0x%016" PRIxPTR, #_x, (uintptr_t)_x)
-#define _LOGp64(_x) ({ typeof(_x) __x = _x; LOGp64(__x); __x; })
-#define LOGu(_x) LOG("%s: %u", #_x, _x)
-#define _LOGu(_x) ({ typeof(_x) __x = _x; LOGu(__x); __x; })
-#define LOGx64(_x) LOG("%s: 0x%016" PRIx64, #_x, (uint64_t)_x)
-#define _LOGx64(_x) ({ typeof(_x) __x = _x; LOGx64(__x); __x; })
-#define LOGx32(_x) LOG("%s: 0x%08x", #_x, _x)
-#define _LOGx32(_x) ({ typeof(_x) __x = _x; LOGx32(__x); __x; })
-#define LOGzu(_x) LOG("%s: %zu", #_x, _x)
-#define _LOGzu(_x) ({ typeof(_x) __x = _x; LOGzu(__x); __x; })
-#define LOGzx32(_x) LOG("%s: 0x%08zx", #_x, _x)
-#define _LOGzx32(_x) ({ typeof(_x) __x = _x; LOGzx32(__x); __x; })
+#define _LOGv(_x, _log_action) \
+	({ typeof(_x) __x = _x; _LOG_(_log_action(_x, __x)); _x; })
+
+#define LOGv(_x, _log_action) \
+	({ LOG_START(); _LOG_(_log_action(_x, _x)); LOG_END(); });
+
+#define __LOGp64(_xs, _x) #_xs ": 0x%016" PRIxPTR, (uintptr_t)_x
+#define __LOGu(_xs, _x) #_xs ": %u", _x
+#define __LOGx64(_xs, _x) #_xs ": 0x%016" PRIx64, (uint64_t)_x
+#define __LOGx32(_xs, _x) #_xs ": 0x%08x", _x
+#define __LOGzu(_xs, _x) #_xs ": %zu", _x
+#define __LOGzx32(_xs, _x) #_xs ": 0x%08zx", _x
+
+#define LOGp64(_x) LOGv(_x, __LOGp64)
+#define _LOGp64(_x) _LOGv(_x, __LOGp64)
+#define LOGu(_x) LOGv(_x, __LOGu)
+#define _LOGu(_x) _LOGv(_x, __LOGu)
+#define LOGx64(_x) LOGv(_x, __LOGx64)
+#define _LOGx64(_x) _LOGv(_x, __LOGx64)
+#define LOGx32(_x) LOGv(_x, __LOGx32)
+#define _LOGx32(_x) _LOGv(_x, __LOGx32);
+#define LOGzu(_x) LOGv(_x, __LOGzu)
+#define _LOGzu(_x) _LOGv(_x, __LOGzu)
+#define LOGzx32(_x) LOGv(_x, __LOGzx32)
+#define _LOGzx32(_x) _LOGv(_x, __LOGzx32)
