@@ -39,10 +39,13 @@ $(OBJ_DIR): $(BUILD_SUBDIR)
 	mkdir -p $@
 
 
-$(OBJS_C): $(OBJ_DIR)/%.o : %.c | $(OBJ_DIR)
+$(OBJS_C): $(OBJ_DIR)/%.c.o : %.c | $(OBJ_DIR)
 	$(COMPILE.c) $(OUTPUT_OPTION) $<
 
-$(OBJS_CPP): $(OBJ_DIR)/%.o : %.cpp | $(OBJ_DIR)
+$(OBJS_CC): $(OBJ_DIR)/%.cc.o : %.cc | $(OBJ_DIR)
+	$(COMPILE.cc) $(OUTPUT_OPTION) $<
+
+$(OBJS_CPP): $(OBJ_DIR)/%.cpp.o : %.cpp | $(OBJ_DIR)
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
 
 
