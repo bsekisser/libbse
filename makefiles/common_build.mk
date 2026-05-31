@@ -1,4 +1,4 @@
-include git/makefiles/common_setup.mk
+include $(GIT_DIR)/makefiles/common_setup.mk
 
 
 all: $(TARGET)

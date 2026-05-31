@@ -19,14 +19,11 @@ DEPS_CPP = $(filter %.d, $(foreach DIR, $(SRC_DIR), $(patsubst $(DIR)/%.cpp, $(O
 
 DUMP_MACHINE := $(shell $(CC) -dumpmachine)
 
-GIT_DIR = /home/$(USER)/git
-
 INCLUDE += $(addprefix -I,$(SRC_DIR))
 INCLUDE += $(foreach DIR, $(SRC_DIR), -I$(DIR)/include)
 INCLUDE += -Iinclude
 INCLUDE += -I.
 INCLUDE += -I$(GIT_DIR)
-#INLCUDE += -Igit
 
 LDFLAGS += -L/home/$(USER)/.local/lib
 
